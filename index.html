@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Live" />
+<meta name="theme-color" content="#000000" />
+<title>Live</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23f9ce34'/><stop offset='0.5' stop-color='%23ee2a7b'/><stop offset='1' stop-color='%236228d7'/></linearGradient></defs><rect width='180' height='180' rx='40' fill='url(%23g)'/><circle cx='90' cy='90' r='30' fill='white'/><circle cx='90' cy='90' r='12' fill='url(%23g)'/></svg>" />
+<style>
+  :root {
+    --accent-1: #f9ce34;
+    --accent-2: #ee2a7b;
+    --accent-3: #6228d7;
+    --gradient: linear-gradient(45deg, var(--accent-1), var(--accent-2), var(--accent-3));
+    --live-badge: linear-gradient(45deg, #ff2a6e, #ff5945);
+    --bg-bottom: #1a0a1a;
+  }
+  body.theme-tiktok {
+    --accent-1: #25f4ee;
+    --accent-2: #ffffff;
+    --accent-3: #fe2c55;
+    --gradient: linear-gradient(45deg, #25f4ee, #fe2c55);
+    --live-badge: #fe2c55;
+    --bg-bottom: #0a0a0a;
+  }
+  body.theme-youtube {
+    --accent-1: #ff0000;
+    --accent-2: #ff4444;
+    --accent-3: #cc0000;
+    --gradient: linear-gradient(45deg, #ff0000, #cc0000);
+    --live-badge: #ff0000;
+    --bg-bottom: #0a0a0a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%; width: 100%;
+    background: #000; overflow: hidden; color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+    overscroll-behavior: none;
+  }
+  button { font-family: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+  input, select, textarea { font-family: inherit; }
+
+  #setup {
+    position: fixed; inset: 0; z-index: 100;
+    background: linear-gradient(180deg, #0a0a0a 0%, var(--bg-bottom) 100%);
+    display: flex; flex-direction: column;
+    padding: 28px 22px; padding-top: max(28px, env(safe-area-inset-top));
+    padding-bottom: max(28px, env(safe-area-inset-bottom));
+    overflow-y: auto;
+  }
+  #setup h1 {
+    font-size: 30px; font-weight: 800; letter-spacing: -0.5px;
+    background: var(--gradient);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 4px;
+  }
+  #setup .subtitle { color: #888; font-size: 14px; margin-bottom: 24px; }
+
+  .theme-tabs {
+    display: flex; gap: 6px; background: #111; padding: 4px;
+    border-radius: 14px; margin-bottom: 18px;
+  }
+  .theme-tab {
+    flex: 1; padding: 10px; font-size: 12px; font-weight: 700;
+    border-radius: 10px; color: #888; transition: 0.2s;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .theme-tab.active { background: var(--gradient); color: #fff; }
+
+  .profile-bar {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 18px;
+    overflow-x: auto; scrollbar-width: none; padding-bottom: 4px;
+  }
+  .profile-bar::-webkit-scrollbar { display: none; }
+  .profile-chip {
+    flex-shrink: 0; padding: 8px 14px; border-radius: 30px;
+    background: #1a1a1a; border: 1px solid #333;
+    font-size: 13px; font-weight: 600; color: #ccc;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .profile-chip.active {
+    background: var(--gradient); border-color: transparent; color: #fff;
+  }
+  .profile-chip .x {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); display: inline-flex;
+    align-items: center; justify-content: center; font-size: 11px;
+    margin-left: 2px;
+  }
+  .profile-chip.add { background: transparent; border-style: dashed; color: #888; }
+
+  #setup label {
+    display: block; font-size: 11px; color: #888;
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 6px; margin-top: 14px; font-weight: 600;
+  }
+  #setup input, #setup select, #setup textarea {
+    width: 100%; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px;
+    padding: 13px 15px; color: #fff; font-size: 15px;
+    -webkit-appearance: none; appearance: none;
+  }
+  #setup textarea { resize: none; min-height: 70px; line-height: 1.4; }
+  #setup input:focus, #setup select:focus, #setup textarea:focus {
+    outline: none; border-color: var(--accent-2);
+  }
+
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #1a1a1a; border-radius: 12px; padding: 13px 15px; margin-top: 8px;
+  }
+  .toggle-row span { font-size: 14px; }
+  .toggle-row .desc { font-size: 11px; color: #777; margin-top: 2px; display: block; }
+  .switch { position: relative; width: 48px; height: 28px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; inset: 0; background: #333; border-radius: 28px; transition: 0.2s; cursor: pointer; }
+  .slider:before { content: ""; position: absolute; height: 22px; width: 22px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: 0.2s; }
+  .switch input:checked + .slider { background: var(--gradient); }
+  .switch input:checked + .slider:before { transform: translateX(20px); }
+
+  .slider-row {
+    background: #1a1a1a; border-radius: 12px; padding: 13px 15px; margin-top: 8px;
+  }
+  .slider-row .lbl { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; }
+  .slider-row .lbl .v { color: var(--accent-2); font-weight: 700; }
+  input[type=range] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 4px; background: #333;
+    border-radius: 2px; outline: none; padding: 0;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--gradient); cursor: pointer; border: 2px solid #fff;
+  }
+
+  #goLive {
+    margin-top: 24px;
+    background: var(--gradient);
+    color: #fff; font-weight: 700; font-size: 17px;
+    padding: 16px; border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(238, 42, 123, 0.35);
+  }
+  #goLive:active { transform: scale(0.98); }
+  #goLive:disabled { opacity: 0.5; }
+  .hint {
+    margin-top: 16px; font-size: 11px; color: #666; line-height: 1.5; text-align: center;
+  }
+  .error-box {
+    margin-top: 14px; padding: 12px 14px; border-radius: 12px;
+    background: rgba(255, 50, 80, 0.15); border: 1px solid rgba(255, 50, 80, 0.4);
+    font-size: 12px; line-height: 1.5; color: #ffb0bd;
+    display: none;
+  }
+  .error-box.show { display: block; }
+
+  details { margin-top: 8px; }
+  details summary {
+    background: #1a1a1a; border-radius: 12px; padding: 13px 15px;
+    font-size: 14px; cursor: pointer; list-style: none;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::after { content: '▾'; color: #666; transition: 0.2s; }
+  details[open] summary::after { transform: rotate(180deg); }
+
+  #live { position: fixed; inset: 0; display: none; }
+  #live.active { display: block; }
+  #video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; background: #000; transform: scaleX(-1);
+  }
+  #video.no-mirror { transform: none; }
+  .overlay-grad-top {
+    position: absolute; top: 0; left: 0; right: 0; height: 180px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0));
+    pointer-events: none;
+  }
+  .overlay-grad-bottom {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 280px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0));
+    pointer-events: none;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: max(12px, env(safe-area-inset-top));
+    left: 12px; right: 12px;
+    display: flex; align-items: center; gap: 8px; z-index: 5;
+  }
+  .profile-pill {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(0,0,0,0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    padding: 5px 12px 5px 5px; border-radius: 30px; flex: 1; min-width: 0;
+  }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--gradient); padding: 2px; flex-shrink: 0;
+  }
+  .avatar-inner {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: #333; border: 2px solid #000;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 13px;
+  }
+  .profile-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+  .profile-name {
+    font-size: 13px; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .verified {
+    width: 12px; height: 12px;
+    background: #3897f0; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .verified::before { content: '✓'; color: #fff; font-size: 8px; font-weight: 900; }
+  .profile-meta { font-size: 11px; color: rgba(255,255,255,0.75); }
+  .live-badge {
+    background: var(--live-badge);
+    color: #fff; font-size: 11px; font-weight: 800;
+    padding: 5px 9px; border-radius: 6px; letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+  .viewers-pill {
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(0,0,0,0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    padding: 7px 11px; border-radius: 30px;
+    font-size: 13px; font-weight: 600; flex-shrink: 0;
+  }
+  .viewers-pill svg { width: 16px; height: 16px; }
+  .close-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(0,0,0,0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .close-btn svg { width: 16px; height: 16px; }
+
+  .pinned-comment {
+    position: absolute;
+    left: 12px; right: 12px;
+    top: calc(max(12px, env(safe-area-inset-top)) + 56px);
+    z-index: 4;
+    background: linear-gradient(90deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex; align-items: flex-start; gap: 8px;
+    border-left: 3px solid var(--accent-2);
+    animation: pinned-in 0.4s ease-out both;
+  }
+  @keyframes pinned-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .pinned-icon {
+    font-size: 12px; color: var(--accent-1); flex-shrink: 0; margin-top: 1px;
+  }
+  .pinned-content { flex: 1; min-width: 0; font-size: 12px; }
+  .pinned-content .pinlabel {
+    font-size: 10px; color: var(--accent-1); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;
+  }
+  .pinned-content .pintext { color: rgba(255,255,255,0.95); line-height: 1.3; }
+
+  .comments {
+    position: absolute;
+    left: 12px; right: 100px; bottom: 90px;
+    max-height: 50vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    overflow: hidden; pointer-events: none; z-index: 4;
+    mask-image: linear-gradient(180deg, transparent 0%, black 25%);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 25%);
+  }
+  .comment {
+    display: flex; align-items: flex-start; gap: 8px;
+    margin-top: 10px;
+    animation: comment-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+    max-width: 100%;
+  }
+  @keyframes comment-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .comment .avatar { width: 28px; height: 28px; }
+  .comment .avatar-inner { font-size: 11px; }
+  .comment-body {
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    padding: 6px 11px; border-radius: 16px;
+    font-size: 13px; line-height: 1.35;
+    max-width: 100%; word-wrap: break-word;
+  }
+  .comment-body .name {
+    font-weight: 600; font-size: 12px;
+    color: rgba(255,255,255,0.9); margin-right: 6px;
+    display: inline-flex; align-items: center; gap: 3px;
+  }
+  .comment-body .badge-crown { font-size: 11px; }
+
+  .comment.event .comment-body {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.9);
+  }
+  .comment.event .comment-body .name { color: #fff; }
+
+  .comment.donation { animation: donation-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+  @keyframes donation-in {
+    from { opacity: 0; transform: translateY(20px) scale(0.85); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .comment.donation .comment-body {
+    background: var(--gradient);
+    box-shadow: 0 6px 22px rgba(238, 42, 123, 0.45);
+    border-radius: 18px; padding: 9px 14px; font-weight: 600;
+  }
+  .comment.donation .comment-body .name { color: #fff; }
+  .comment.donation .gift-emoji { font-size: 16px; margin-right: 4px; }
+
+  .hearts-area {
+    position: absolute; right: 0; bottom: 80px;
+    width: 80px; height: 60vh;
+    pointer-events: none; z-index: 3; overflow: hidden;
+  }
+  .heart {
+    position: absolute; bottom: 0; left: 50%;
+    font-size: 26px;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+    will-change: transform, opacity;
+    animation: heart-rise 4s ease-out forwards;
+  }
+  @keyframes heart-rise {
+    0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; }
+    10% { transform: translate(-50%, -20px) scale(1.1); opacity: 1; }
+    100% { transform: translate(var(--drift, -50%), -100vh) scale(0.8) rotate(var(--rot, 0deg)); opacity: 0; }
+  }
+
+  .bottom-bar {
+    position: absolute;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    left: 12px; right: 12px;
+    display: flex; align-items: center; gap: 8px; z-index: 5;
+  }
+  .comment-input {
+    flex: 1; background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.25);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    padding: 11px 16px; border-radius: 30px;
+    font-size: 13px; color: rgba(255,255,255,0.9); pointer-events: none;
+  }
+  .icon-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .icon-btn svg { width: 22px; height: 22px; fill: #fff; }
+
+  .control-panel {
+    position: absolute;
+    top: calc(max(12px, env(safe-area-inset-top)) + 50px);
+    right: 12px; z-index: 6;
+    display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+  }
+  .ctrl-btn {
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    color: #fff; font-size: 12px; font-weight: 600;
+    padding: 8px 14px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .ctrl-btn.end { background: rgba(255, 42, 110, 0.85); }
+
+  .toast {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.85);
+    padding: 14px 22px; border-radius: 14px;
+    font-size: 14px; font-weight: 500; z-index: 20;
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    text-align: center; max-width: 80%;
+    animation: toast-in 0.3s ease-out;
+  }
+  @keyframes toast-in { from { opacity: 0; } to { opacity: 1; } }
+
+  .install-banner {
+    position: fixed; bottom: 12px; left: 12px; right: 12px;
+    background: rgba(20,20,20,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid #333; border-radius: 14px;
+    padding: 12px 14px; z-index: 200;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; line-height: 1.4;
+    animation: toast-in 0.4s ease-out;
+  }
+  .install-banner .x-banner {
+    background: #333; border-radius: 50%;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<div id="setup">
+  <h1>Live Setup</h1>
+  <div class="subtitle">Configure your stream</div>
+
+  <div class="theme-tabs">
+    <button class="theme-tab active" data-theme="instagram">Instagram</button>
+    <button class="theme-tab" data-theme="tiktok">TikTok</button>
+    <button class="theme-tab" data-theme="youtube">YouTube</button>
+  </div>
+
+  <label>Profiles</label>
+  <div class="profile-bar" id="profileBar"></div>
+
+  <label>Username</label>
+  <input id="username" type="text" value="nabillion" maxlength="30" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+
+  <label>Stream Title (optional)</label>
+  <input id="streamTitle" type="text" placeholder="What's happening?" maxlength="60" />
+
+  <label>Pinned Comment (optional)</label>
+  <input id="pinnedComment" type="text" placeholder="e.g. like and follow for daily lives" maxlength="120" />
+
+  <label>Starting Viewers</label>
+  <select id="viewerPreset">
+    <option value="500">500</option>
+    <option value="2500">2.5K</option>
+    <option value="10000" selected>10K</option>
+    <option value="30000">30K</option>
+    <option value="50000">50K</option>
+    <option value="100000">100K</option>
+    <option value="500000">500K</option>
+  </select>
+
+  <label>Camera</label>
+  <select id="cameraSelect">
+    <option value="user">Front (selfie)</option>
+    <option value="environment">Back</option>
+  </select>
+
+  <details>
+    <summary>Activity Settings</summary>
+    <div style="margin-top: 8px;">
+      <div class="toggle-row">
+        <div><span>Comments</span><span class="desc">Realistic chat scrolling by</span></div>
+        <label class="switch"><input type="checkbox" id="tComments" checked /><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div><span>Floating hearts</span><span class="desc">Tappable hearts rise from corner</span></div>
+        <label class="switch"><input type="checkbox" id="tHearts" checked /><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div><span>Donations / gifts</span><span class="desc">Roses, diamonds, rockets, etc.</span></div>
+        <label class="switch"><input type="checkbox" id="tDonations" checked /><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div><span>Join notifications</span><span class="desc">"User joined" messages</span></div>
+        <label class="switch"><input type="checkbox" id="tJoins" checked /><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div><span>Verified / top fan badges</span><span class="desc">Some commenters get checks & crowns</span></div>
+        <label class="switch"><input type="checkbox" id="tBadges" checked /><span class="slider"></span></label>
+      </div>
+
+      <div class="slider-row">
+        <div class="lbl"><span>Comment speed</span><span class="v" id="speedVal">Normal</span></div>
+        <input type="range" id="speedRange" min="0" max="3" step="1" value="1" />
+      </div>
+      <div class="slider-row">
+        <div class="lbl"><span>Donation frequency</span><span class="v" id="donVal">Normal</span></div>
+        <input type="range" id="donRange" min="0" max="3" step="1" value="1" />
+      </div>
+    </div>
+  </details>
+
+  <button id="goLive">Go Live</button>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <div class="hint">Tap "Go Live" then allow camera & mic.<br>Use your phone's screen recorder to save with overlays.</div>
+</div>
+
+<div id="live">
+  <video id="video" autoplay muted playsinline></video>
+  <div class="overlay-grad-top"></div>
+  <div class="overlay-grad-bottom"></div>
+
+  <div class="top-bar">
+    <div class="profile-pill">
+      <div class="avatar"><div class="avatar-inner" id="avatarInner">N</div></div>
+      <div class="profile-text">
+        <div class="profile-name">
+          <span id="liveName">nabillion</span>
+          <span class="verified" id="liveVerified" style="display:none"></span>
+        </div>
+        <div class="profile-meta" id="liveMeta">Live</div>
+      </div>
+      <div class="live-badge">LIVE</div>
+    </div>
+    <div class="viewers-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+      <span id="viewerCount">0</span>
+    </div>
+    <button class="close-btn" id="closeBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <div class="pinned-comment" id="pinnedBox" style="display:none">
+    <div class="pinned-icon">📌</div>
+    <div class="pinned-content">
+      <div class="pinlabel">Pinned</div>
+      <div class="pintext" id="pinnedText"></div>
+    </div>
+  </div>
+
+  <div class="control-panel">
+    <button class="ctrl-btn end" id="endBtn">End Live</button>
+  </div>
+
+  <div class="comments" id="comments"></div>
+  <div class="hearts-area" id="hearts"></div>
+
+  <div class="bottom-bar">
+    <div class="comment-input">Add a comment…</div>
+    <button class="icon-btn" id="heartBtn">
+      <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9C.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="install-banner" id="installBanner" style="display:none">
+  <div style="flex:1">
+    <strong>Add to Home Screen</strong> for fullscreen app mode.<br>
+    Tap <span style="font-size:14px">⎋</span> Share → "Add to Home Screen"
+  </div>
+  <button class="x-banner" id="dismissBanner">×</button>
+</div>
+
+<script>
+'use strict';
+
+const state = {
+  stream: null, isLive: false,
+  viewerCount: 0, viewerTarget: 10000,
+  username: 'nabillion', streamTitle: '', pinnedComment: '',
+  enableComments: true, enableHearts: true, enableDonations: true, enableJoins: true, enableBadges: true,
+  facing: 'user', intervals: [],
+  theme: 'instagram',
+  speedTier: 1, donTier: 1,
+  badgeMap: new Map(),
+};
+
+const speedMultipliers = [1.8, 1.0, 0.55, 0.3];
+const speedLabels = ['Slow', 'Normal', 'Fast', 'Insane'];
+const donRanges = [[60, 120], [25, 50], [10, 20], [4, 10]];
+const donLabels = ['Rare', 'Normal', 'Frequent', 'Constant'];
+
+const usernamePool = ['sarah_jpg','mikedoes','its_jenna','aaliyah.k','dom_b','tiffanyy','rico.suave','ash.lol','kimora.x','jaybird.94','milo.zz','priya_p','tito_v','lana.del','marcus.ig','dev_oh','ohh.brii','xx.alex','kev.in','noooor','sams.world','official.dre','its.nadia','elena_03','badrobotcam','shaez_','ts_kelly','imanioo','jaspr','wassupkenz','yokoo','reginalddd','babyybeans','ms.mira','officialroyy','tommyy.b','itzlulu','xander.q','bria_kay','danny.d','ferr.real','mochi.poke','samm_iam','yt.jordan','kate__bee','ralphhhh','luna.star.x','b.willz','cee.dot','mz.harper','hugo_real','tashiii','hennygirl','j.crooked','nashtyy','official.zay','chrishedge','iam.cammie','iyaana','bk.knight','elliotluvr','ohh.taylor','itzkris','rmsy.j','avaaaa.b','peeej_','viv.iann','gabbyglow','it.s.maya','therealnick','jpcasey','xxannie','maaark.b','heyyitssav','tommcphee','simba.x','pria_v','bria_xoxo','noor.91','msarjun','taylordreams','officialmoesh','dev_ito','rxxchel','julezjulez','ohh.lex','vee.the.don','lilcalvin','daniii.k','itz_jess','jet.li','jillsthrills','sneakerheadj','carla.q','xx.zee','hayleyy.b','mooonbeam','pookieee','c.hugo','officialmilan','ohh.tashi','b.rownie','jorts.guy'];
+
+const commentPool = ["yooo who's here","lets gooo","first!","🔥🔥🔥","stop ur so cute","where r u rn","ahh hi!!","👀👀","the lighting is insane","say hi to me pls","ur energy is everything","OMG","obsessed","❤️❤️❤️","drop a song rec","what cam u using","literally crying","i needed this today","i love u","👑","the way ur smiling","my fav person fr","pls do a q&a","tea?","where's the dog","i'm so early omg","vibes are immaculate","that lipstick tho","bestie","yas","this song slaps","💀💀💀","no bc same","iconic","i can't","✨","this is therapeutic ngl","where r u from?","what time is it there?","sound is great","ur outfit >>>","talk to us","play that one song again","what perfume omg","u look so good wym","the camera quality","we love u","stream longer pls","i'm dying laughing","i'm in love","queen behavior","❤️","🥺","omg HI","mom said hi","i'm at work watching this lol","bye not me lurking","give us a tour","where did u get that","i'm telling my mom about you","real","facts","okayyy","💯💯","the way u said that","hi from canada 🇨🇦","hi from london","hi from dubai 🇦🇪","hi from manila","hi from lagos","hi from brazil 🇧🇷","hi from nyc","hi from LA","hi from melbourne","u up early","u up late tho","u eat yet?","what u making for dinner","more lives plsss","do this every day","i'm hooked","energy >>>","wait u're so funny","say my name pls","drop the @","ily ily ily","ur skin is glowing","what filter","no filter? insane","love this for u","the music omg","this is so chill","chat is moving fast lol","30k watching wow","i was just thinking abt u","ur frenchie is so cute","where's elliot","elliot say hi 🐶","is that a frenchie?","🐶🐶🐶","ur so down to earth","rare W","stuck here forever","this is my comfort live","sending love from far away ❤️"];
+
+const giftPool = [
+  { emoji: '🌹', name: 'Rose' }, { emoji: '🍦', name: 'Ice Cream' },
+  { emoji: '☕', name: 'Coffee' }, { emoji: '🎁', name: 'Gift' },
+  { emoji: '💎', name: 'Diamond' }, { emoji: '🚀', name: 'Rocket' },
+  { emoji: '👑', name: 'Crown' }, { emoji: '🏆', name: 'Trophy' },
+  { emoji: '🦁', name: 'Lion' }, { emoji: '🐉', name: 'Dragon' },
+];
+const giftMessages = ["love u!!","ur amazing","❤️❤️","for u queen","for u king","keep it up!","love this stream","ur the best","from manila <3","stay blessed","love and light","for elliot 🐶","ur energy <3","biggest fan!"];
+
+const $ = (id) => document.getElementById(id);
+
+document.querySelectorAll('.theme-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.theme-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    state.theme = tab.dataset.theme;
+    document.body.className = 'theme-' + state.theme;
+    saveSettings();
+  });
+});
+
+function loadProfiles() {
+  try { const p = localStorage.getItem('liveProfiles'); return p ? JSON.parse(p) : []; } catch { return []; }
+}
+function saveProfiles(profiles) { try { localStorage.setItem('liveProfiles', JSON.stringify(profiles)); } catch {} }
+function loadActiveProfile() { try { return localStorage.getItem('liveActiveProfile') || ''; } catch { return ''; } }
+function setActiveProfile(name) { try { localStorage.setItem('liveActiveProfile', name); } catch {} }
+
+function renderProfiles() {
+  const profiles = loadProfiles();
+  const active = loadActiveProfile();
+  const bar = $('profileBar');
+  bar.innerHTML = '';
+  profiles.forEach(p => {
+    const chip = document.createElement('button');
+    chip.className = 'profile-chip' + (p.username === active ? ' active' : '');
+    chip.innerHTML = `<span>${esc(p.username)}</span>`;
+    const x = document.createElement('span');
+    x.className = 'x'; x.textContent = '×';
+    x.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (confirm(`Delete profile "${p.username}"?`)) {
+        saveProfiles(profiles.filter(pp => pp.username !== p.username));
+        if (active === p.username) setActiveProfile('');
+        renderProfiles();
+      }
+    });
+    chip.appendChild(x);
+    chip.addEventListener('click', () => loadProfileIntoForm(p));
+    bar.appendChild(chip);
+  });
+  const add = document.createElement('button');
+  add.className = 'profile-chip add';
+  add.textContent = '+ Save current';
+  add.addEventListener('click', saveCurrentProfile);
+  bar.appendChild(add);
+}
+
+function loadProfileIntoForm(p) {
+  $('username').value = p.username || '';
+  $('streamTitle').value = p.streamTitle || '';
+  $('pinnedComment').value = p.pinnedComment || '';
+  $('viewerPreset').value = p.viewerTarget || '10000';
+  $('cameraSelect').value = p.facing || 'user';
+  $('tComments').checked = p.enableComments !== false;
+  $('tHearts').checked = p.enableHearts !== false;
+  $('tDonations').checked = p.enableDonations !== false;
+  $('tJoins').checked = p.enableJoins !== false;
+  $('tBadges').checked = p.enableBadges !== false;
+  $('speedRange').value = p.speedTier ?? 1;
+  $('donRange').value = p.donTier ?? 1;
+  if (p.theme) {
+    document.querySelectorAll('.theme-tab').forEach(t => t.classList.toggle('active', t.dataset.theme === p.theme));
+    state.theme = p.theme;
+    document.body.className = 'theme-' + p.theme;
+  }
+  setActiveProfile(p.username);
+  updateSliderLabels();
+  renderProfiles();
+}
+
+function saveCurrentProfile() {
+  const username = $('username').value.trim();
+  if (!username) return alert('Enter a username first');
+  const profile = {
+    username,
+    streamTitle: $('streamTitle').value.trim(),
+    pinnedComment: $('pinnedComment').value.trim(),
+    viewerTarget: $('viewerPreset').value,
+    facing: $('cameraSelect').value,
+    enableComments: $('tComments').checked,
+    enableHearts: $('tHearts').checked,
+    enableDonations: $('tDonations').checked,
+    enableJoins: $('tJoins').checked,
+    enableBadges: $('tBadges').checked,
+    speedTier: parseInt($('speedRange').value, 10),
+    donTier: parseInt($('donRange').value, 10),
+    theme: state.theme,
+  };
+  let profiles = loadProfiles();
+  profiles = profiles.filter(p => p.username !== username);
+  profiles.push(profile);
+  saveProfiles(profiles);
+  setActiveProfile(username);
+  renderProfiles();
+  showToast('Profile saved');
+}
+
+function saveSettings() { try { localStorage.setItem('liveTheme', state.theme); } catch {} }
+function loadSettings() {
+  try {
+    const t = localStorage.getItem('liveTheme');
+    if (t) {
+      state.theme = t;
+      document.body.className = 'theme-' + t;
+      document.querySelectorAll('.theme-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.theme === t));
+    }
+  } catch {}
+}
+
+function updateSliderLabels() {
+  $('speedVal').textContent = speedLabels[parseInt($('speedRange').value, 10)];
+  $('donVal').textContent = donLabels[parseInt($('donRange').value, 10)];
+}
+$('speedRange').addEventListener('input', updateSliderLabels);
+$('donRange').addEventListener('input', updateSliderLabels);
+
+$('goLive').addEventListener('click', startLive);
+$('endBtn').addEventListener('click', endLive);
+$('closeBtn').addEventListener('click', endLive);
+$('heartBtn').addEventListener('click', () => {
+  for (let i = 0; i < 6; i++) setTimeout(() => spawnHeart(true), i * 80);
+});
+
+function fmt(n) {
+  if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+  if (n >= 10000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+  return String(Math.floor(n));
+}
+function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function avatarColor(seed) {
+  const palette = ['linear-gradient(135deg,#f093fb,#f5576c)','linear-gradient(135deg,#4facfe,#00f2fe)','linear-gradient(135deg,#43e97b,#38f9d7)','linear-gradient(135deg,#fa709a,#fee140)','linear-gradient(135deg,#30cfd0,#330867)','linear-gradient(135deg,#a8edea,#fed6e3)','linear-gradient(135deg,#ff9a9e,#fecfef)','linear-gradient(135deg,#ffecd2,#fcb045)','linear-gradient(135deg,#667eea,#764ba2)','linear-gradient(135deg,#ffafbd,#ffc3a0)'];
+  let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) | 0;
+  return palette[Math.abs(h) % palette.length];
+}
+function esc(s) { return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function getBadge(name) {
+  if (!state.enableBadges) return null;
+  if (state.badgeMap.has(name)) return state.badgeMap.get(name);
+  const r = Math.random();
+  let badge = null;
+  if (r < 0.07) badge = 'verified';
+  else if (r < 0.12) badge = 'crown';
+  state.badgeMap.set(name, badge);
+  return badge;
+}
+function showToast(msg, ms = 2200) {
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  (state.isLive ? $('live') : $('setup')).appendChild(t);
+  setTimeout(() => t.remove(), ms);
+}
+function showError(msg) { const box = $('errorBox'); box.textContent = msg; box.classList.add('show'); }
+function hideError() { $('errorBox').classList.remove('show'); }
+
+async function startLive() {
+  const btn = $('goLive');
+  btn.disabled = true; btn.textContent = 'Connecting…'; hideError();
+
+  state.username = ($('username').value || 'user').trim().slice(0, 30);
+  state.streamTitle = $('streamTitle').value.trim();
+  state.pinnedComment = $('pinnedComment').value.trim();
+  state.viewerTarget = parseInt($('viewerPreset').value, 10);
+  state.facing = $('cameraSelect').value;
+  state.enableComments = $('tComments').checked;
+  state.enableHearts = $('tHearts').checked;
+  state.enableDonations = $('tDonations').checked;
+  state.enableJoins = $('tJoins').checked;
+  state.enableBadges = $('tBadges').checked;
+  state.speedTier = parseInt($('speedRange').value, 10);
+  state.donTier = parseInt($('donRange').value, 10);
+  state.badgeMap.clear();
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    btn.disabled = false; btn.textContent = 'Go Live';
+    showError('Camera access not available. Open over https://');
+    return;
+  }
+
+  try {
+    state.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: state.facing }, audio: true });
+  } catch (err) {
+    btn.disabled = false; btn.textContent = 'Go Live';
+    let msg = '';
+    if (err.name === 'NotAllowedError') msg = 'Permission denied. Reload and allow camera/mic.';
+    else if (err.name === 'NotFoundError') msg = 'No camera found.';
+    else if (err.name === 'NotReadableError') msg = 'Camera busy. Close other apps using it.';
+    else msg = (err.name || 'Error') + ': ' + (err.message || err);
+    showError(msg);
+    return;
+  }
+
+  $('video').srcObject = state.stream;
+  $('video').classList.toggle('no-mirror', state.facing !== 'user');
+  $('liveName').textContent = state.username;
+  $('liveMeta').textContent = state.streamTitle || 'Live';
+  $('avatarInner').textContent = state.username.charAt(0).toUpperCase();
+  $('avatarInner').style.background = avatarColor(state.username);
+  $('liveVerified').style.display = 'inline-flex';
+
+  if (state.pinnedComment) {
+    $('pinnedText').textContent = state.pinnedComment;
+    $('pinnedBox').style.display = 'flex';
+  } else {
+    $('pinnedBox').style.display = 'none';
+  }
+
+  $('setup').style.display = 'none';
+  $('live').classList.add('active');
+
+  state.isLive = true;
+  state.viewerCount = Math.max(1, Math.floor(state.viewerTarget * 0.05));
+  updateViewerDisplay();
+  rampViewers();
+  startActivity();
+
+  btn.disabled = false; btn.textContent = 'Go Live';
+}
+
+function updateViewerDisplay() { $('viewerCount').textContent = fmt(state.viewerCount); }
+
+function rampViewers() {
+  const rampDuration = 35000 + Math.random() * 25000;
+  const startCount = state.viewerCount;
+  const startTime = Date.now();
+  const rampInterval = setInterval(() => {
+    const elapsed = Date.now() - startTime;
+    const progress = Math.min(1, elapsed / rampDuration);
+    const eased = 1 - Math.pow(1 - progress, 2.5);
+    state.viewerCount = Math.floor(startCount + (state.viewerTarget - startCount) * eased);
+    state.viewerCount += randInt(-Math.floor(state.viewerTarget * 0.002), Math.floor(state.viewerTarget * 0.003));
+    state.viewerCount = Math.max(1, state.viewerCount);
+    updateViewerDisplay();
+    if (progress >= 1) {
+      clearInterval(rampInterval);
+      const fluxInterval = setInterval(() => {
+        if (!state.isLive) return clearInterval(fluxInterval);
+        const drift = (Math.random() - 0.45) * state.viewerTarget * 0.015;
+        state.viewerCount = Math.max(1, Math.floor(state.viewerCount + drift));
+        if (Math.random() < 0.04) state.viewerCount += randInt(50, Math.max(100, Math.floor(state.viewerTarget * 0.03)));
+        state.viewerCount = Math.min(state.viewerCount, Math.floor(state.viewerTarget * 1.4));
+        updateViewerDisplay();
+      }, 1500);
+      state.intervals.push(fluxInterval);
+    }
+  }, 250);
+  state.intervals.push(rampInterval);
+}
+
+function startActivity() {
+  const speedMult = speedMultipliers[state.speedTier];
+  const baseDelay = Math.max(450, 2200 - Math.log10(state.viewerTarget) * 280) * speedMult;
+  function scheduleComment() {
+    if (!state.isLive) return;
+    const delay = baseDelay * (0.5 + Math.random());
+    setTimeout(() => {
+      if (!state.isLive) return;
+      const r = Math.random();
+      if (state.enableJoins && r < 0.12) addJoinEvent();
+      else if (state.enableComments) addComment();
+      scheduleComment();
+    }, delay);
+  }
+  scheduleComment();
+  if (state.enableHearts) {
+    const heartInterval = setInterval(() => {
+      if (!state.isLive) return;
+      const count = randInt(1, 3);
+      for (let i = 0; i < count; i++) setTimeout(() => spawnHeart(false), i * 150);
+    }, 1100);
+    state.intervals.push(heartInterval);
+  }
+  if (state.enableDonations) {
+    const [minS, maxS] = donRanges[state.donTier];
+    function scheduleDonation() {
+      if (!state.isLive) return;
+      const delay = randInt(minS * 1000, maxS * 1000);
+      setTimeout(() => { if (!state.isLive) return; addDonation(); scheduleDonation(); }, delay);
+    }
+    setTimeout(scheduleDonation, randInt(5000, 12000));
+  }
+}
+
+function addComment() { appendComment({ name: rand(usernamePool), text: rand(commentPool), type: 'normal' }); }
+function addJoinEvent() {
+  const name = rand(usernamePool);
+  const txt = Math.random() < 0.5 ? 'joined' : 'started following';
+  appendComment({ name, joinText: txt, type: 'event' });
+}
+function addDonation() {
+  const name = rand(usernamePool);
+  const gift = rand(giftPool);
+  const msg = Math.random() < 0.6 ? rand(giftMessages) : '';
+  appendComment({ name, text: msg, gift, type: 'donation' });
+  state.viewerCount += randInt(5, 30);
+  updateViewerDisplay();
+  for (let i = 0; i < 8; i++) setTimeout(() => spawnHeart(false), i * 70);
+}
+
+function appendComment({ name, text, type, gift, joinText }) {
+  const el = document.createElement('div');
+  el.className = 'comment' + (type === 'event' ? ' event' : '') + (type === 'donation' ? ' donation' : '');
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  const inner = document.createElement('div');
+  inner.className = 'avatar-inner';
+  inner.textContent = name.charAt(0).toUpperCase();
+  inner.style.background = avatarColor(name);
+  avatar.appendChild(inner);
+  const badge = getBadge(name);
+  let badgeHtml = '';
+  if (badge === 'verified') badgeHtml = ' <span class="verified"></span>';
+  else if (badge === 'crown') badgeHtml = ' <span class="badge-crown">👑</span>';
+  const body = document.createElement('div');
+  body.className = 'comment-body';
+  if (type === 'donation') {
+    body.innerHTML = `<span class="name">${esc(name)}${badgeHtml}</span> sent <span class="gift-emoji">${gift.emoji}</span>${esc(gift.name)}${text ? ' · ' + esc(text) : ''}`;
+  } else if (type === 'event') {
+    body.innerHTML = `<span class="name">${esc(name)}${badgeHtml}</span> ${esc(joinText)}`;
+  } else {
+    body.innerHTML = `<span class="name">${esc(name)}${badgeHtml}</span>${esc(text)}`;
+  }
+  el.appendChild(avatar); el.appendChild(body);
+  $('comments').appendChild(el);
+  while ($('comments').children.length > 12) $('comments').removeChild($('comments').firstChild);
+}
+
+function spawnHeart(fromTap) {
+  const colors = ['❤️','🧡','💛','💚','💙','💜','🤍','💖','💗'];
+  const h = document.createElement('div');
+  h.className = 'heart'; h.textContent = rand(colors);
+  h.style.left = randInt(20, 60) + 'px';
+  h.style.setProperty('--drift', `calc(-50% + ${randInt(-80, 30)}px)`);
+  h.style.setProperty('--rot', randInt(-30, 30) + 'deg');
+  if (fromTap) h.style.fontSize = '32px';
+  $('hearts').appendChild(h);
+  setTimeout(() => h.remove(), 4200);
+}
+
+function endLive() {
+  state.isLive = false;
+  state.intervals.forEach(clearInterval);
+  state.intervals = [];
+  if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; }
+  $('video').srcObject = null;
+  $('live').classList.remove('active');
+  $('setup').style.display = '';
+  $('comments').innerHTML = '';
+  $('hearts').innerHTML = '';
+  $('liveVerified').style.display = 'none';
+}
+
+function maybeShowInstallBanner() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  const dismissed = localStorage.getItem('installDismissed');
+  if (isIOS && !isStandalone && !dismissed) {
+    setTimeout(() => $('installBanner').style.display = 'flex', 1500);
+  }
+}
+$('dismissBanner').addEventListener('click', () => {
+  $('installBanner').style.display = 'none';
+  try { localStorage.setItem('installDismissed', '1'); } catch {}
+});
+
+loadSettings();
+renderProfiles();
+updateSliderLabels();
+maybeShowInstallBanner();
+
+window.addEventListener('beforeunload', (e) => { if (state.isLive) { e.preventDefault(); e.returnValue = ''; } });
+</script>
+</body>
+</html>
