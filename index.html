@@ -12,95 +12,33 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23f9ce34'/><stop offset='0.5' stop-color='%23ee2a7b'/><stop offset='1' stop-color='%236228d7'/></linearGradient></defs><rect width='180' height='180' rx='40' fill='url(%23g)'/><circle cx='90' cy='90' r='30' fill='white'/><circle cx='90' cy='90' r='12' fill='url(%23g)'/></svg>" />
 <style>
   :root {
-    --accent-1: #f9ce34;
-    --accent-2: #ee2a7b;
-    --accent-3: #6228d7;
+    --accent-1: #f9ce34; --accent-2: #ee2a7b; --accent-3: #6228d7;
     --gradient: linear-gradient(45deg, var(--accent-1), var(--accent-2), var(--accent-3));
     --live-badge: linear-gradient(45deg, #ff2a6e, #ff5945);
     --bg-bottom: #1a0a1a;
   }
-  body.theme-tiktok {
-    --accent-1: #25f4ee; --accent-2: #ffffff; --accent-3: #fe2c55;
-    --gradient: linear-gradient(45deg, #25f4ee, #fe2c55);
-    --live-badge: #fe2c55; --bg-bottom: #0a0a0a;
-  }
-  body.theme-youtube {
-    --accent-1: #ff0000; --accent-2: #ff4444; --accent-3: #cc0000;
-    --gradient: linear-gradient(45deg, #ff0000, #cc0000);
-    --live-badge: #ff0000; --bg-bottom: #0a0a0a;
-  }
+  body.theme-tiktok { --accent-1: #25f4ee; --accent-2: #ffffff; --accent-3: #fe2c55; --gradient: linear-gradient(45deg, #25f4ee, #fe2c55); --live-badge: #fe2c55; --bg-bottom: #0a0a0a; }
+  body.theme-youtube { --accent-1: #ff0000; --accent-2: #ff4444; --accent-3: #cc0000; --gradient: linear-gradient(45deg, #ff0000, #cc0000); --live-badge: #ff0000; --bg-bottom: #0a0a0a; }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body {
-    height: 100%; width: 100%;
-    background: #000; overflow: hidden; color: #fff;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
-    overscroll-behavior: none;
-  }
+  html, body { height: 100%; width: 100%; background: #000; overflow: hidden; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif; overscroll-behavior: none; }
   button { font-family: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
   input, select, textarea { font-family: inherit; }
-  #setup {
-    position: fixed; inset: 0; z-index: 100;
-    background: linear-gradient(180deg, #0a0a0a 0%, var(--bg-bottom) 100%);
-    display: flex; flex-direction: column;
-    padding: 28px 22px;
-    padding-top: max(28px, env(safe-area-inset-top));
-    padding-bottom: max(28px, env(safe-area-inset-bottom));
-    overflow-y: auto;
-  }
-  #setup h1 {
-    font-size: 30px; font-weight: 800; letter-spacing: -0.5px;
-    background: var(--gradient);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; margin-bottom: 4px;
-  }
+  #setup { position: fixed; inset: 0; z-index: 100; background: linear-gradient(180deg, #0a0a0a 0%, var(--bg-bottom) 100%); display: flex; flex-direction: column; padding: 28px 22px; padding-top: max(28px, env(safe-area-inset-top)); padding-bottom: max(28px, env(safe-area-inset-bottom)); overflow-y: auto; }
+  #setup h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 4px; }
   #setup .subtitle { color: #888; font-size: 14px; margin-bottom: 24px; }
-  .theme-tabs {
-    display: flex; gap: 6px; background: #111; padding: 4px;
-    border-radius: 14px; margin-bottom: 18px;
-  }
-  .theme-tab {
-    flex: 1; padding: 10px; font-size: 12px; font-weight: 700;
-    border-radius: 10px; color: #888; transition: 0.2s;
-    text-transform: uppercase; letter-spacing: 0.5px;
-  }
+  .theme-tabs { display: flex; gap: 6px; background: #111; padding: 4px; border-radius: 14px; margin-bottom: 18px; }
+  .theme-tab { flex: 1; padding: 10px; font-size: 12px; font-weight: 700; border-radius: 10px; color: #888; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
   .theme-tab.active { background: var(--gradient); color: #fff; }
-  .profile-bar {
-    display: flex; align-items: center; gap: 8px; margin-bottom: 18px;
-    overflow-x: auto; scrollbar-width: none; padding-bottom: 4px;
-  }
+  .profile-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
   .profile-bar::-webkit-scrollbar { display: none; }
-  .profile-chip {
-    flex-shrink: 0; padding: 8px 14px; border-radius: 30px;
-    background: #1a1a1a; border: 1px solid #333;
-    font-size: 13px; font-weight: 600; color: #ccc;
-    white-space: nowrap;
-    display: flex; align-items: center; gap: 6px;
-  }
+  .profile-chip { flex-shrink: 0; padding: 8px 14px; border-radius: 30px; background: #1a1a1a; border: 1px solid #333; font-size: 13px; font-weight: 600; color: #ccc; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
   .profile-chip.active { background: var(--gradient); border-color: transparent; color: #fff; }
-  .profile-chip .x {
-    width: 16px; height: 16px; border-radius: 50%;
-    background: rgba(255,255,255,0.2); display: inline-flex;
-    align-items: center; justify-content: center; font-size: 11px;
-    margin-left: 2px;
-  }
+  .profile-chip .x { width: 16px; height: 16px; border-radius: 50%; background: rgba(255,255,255,0.2); display: inline-flex; align-items: center; justify-content: center; font-size: 11px; margin-left: 2px; }
   .profile-chip.add { background: transparent; border-style: dashed; color: #888; }
-  #setup label {
-    display: block; font-size: 11px; color: #888;
-    text-transform: uppercase; letter-spacing: 1px;
-    margin-bottom: 6px; margin-top: 14px; font-weight: 600;
-  }
-  #setup input, #setup select, #setup textarea {
-    width: 100%; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px;
-    padding: 13px 15px; color: #fff; font-size: 15px;
-    -webkit-appearance: none; appearance: none;
-  }
-  #setup input:focus, #setup select:focus, #setup textarea:focus {
-    outline: none; border-color: var(--accent-2);
-  }
-  .toggle-row {
-    display: flex; align-items: center; justify-content: space-between;
-    background: #1a1a1a; border-radius: 12px; padding: 13px 15px; margin-top: 8px;
-  }
+  #setup label { display: block; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; margin-top: 14px; font-weight: 600; }
+  #setup input, #setup select, #setup textarea { width: 100%; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 13px 15px; color: #fff; font-size: 15px; -webkit-appearance: none; appearance: none; }
+  #setup input:focus, #setup select:focus, #setup textarea:focus { outline: none; border-color: var(--accent-2); }
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; background: #1a1a1a; border-radius: 12px; padding: 13px 15px; margin-top: 8px; }
   .toggle-row span { font-size: 14px; }
   .toggle-row .desc { font-size: 11px; color: #777; margin-top: 2px; display: block; }
   .switch { position: relative; width: 48px; height: 28px; flex-shrink: 0; }
@@ -112,281 +50,93 @@
   .slider-row { background: #1a1a1a; border-radius: 12px; padding: 13px 15px; margin-top: 8px; }
   .slider-row .lbl { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; }
   .slider-row .lbl .v { color: var(--accent-2); font-weight: 700; }
-  input[type=range] {
-    -webkit-appearance: none; appearance: none;
-    width: 100%; height: 4px; background: #333;
-    border-radius: 2px; outline: none; padding: 0;
-  }
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none; appearance: none;
-    width: 22px; height: 22px; border-radius: 50%;
-    background: var(--gradient); cursor: pointer; border: 2px solid #fff;
-  }
-  #goLive {
-    margin-top: 24px;
-    background: var(--gradient);
-    color: #fff; font-weight: 700; font-size: 17px;
-    padding: 16px; border-radius: 14px;
-    box-shadow: 0 8px 24px rgba(238, 42, 123, 0.35);
-  }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; background: #333; border-radius: 2px; outline: none; padding: 0; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--gradient); cursor: pointer; border: 2px solid #fff; }
+  #goLive { margin-top: 24px; background: var(--gradient); color: #fff; font-weight: 700; font-size: 17px; padding: 16px; border-radius: 14px; box-shadow: 0 8px 24px rgba(238, 42, 123, 0.35); }
   #goLive:active { transform: scale(0.98); }
   #goLive:disabled { opacity: 0.5; }
   .hint { margin-top: 16px; font-size: 11px; color: #666; line-height: 1.5; text-align: center; }
-  .error-box {
-    margin-top: 14px; padding: 12px 14px; border-radius: 12px;
-    background: rgba(255, 50, 80, 0.15); border: 1px solid rgba(255, 50, 80, 0.4);
-    font-size: 12px; line-height: 1.5; color: #ffb0bd; display: none;
-  }
+  .error-box { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: rgba(255, 50, 80, 0.15); border: 1px solid rgba(255, 50, 80, 0.4); font-size: 12px; line-height: 1.5; color: #ffb0bd; display: none; }
   .error-box.show { display: block; }
   details { margin-top: 8px; }
-  details summary {
-    background: #1a1a1a; border-radius: 12px; padding: 13px 15px;
-    font-size: 14px; cursor: pointer; list-style: none;
-    display: flex; justify-content: space-between; align-items: center;
-  }
+  details summary { background: #1a1a1a; border-radius: 12px; padding: 13px 15px; font-size: 14px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
   details summary::-webkit-details-marker { display: none; }
   details summary::after { content: '▾'; color: #666; transition: 0.2s; }
   details[open] summary::after { transform: rotate(180deg); }
+  .custom-pair { display: flex; gap: 6px; margin-top: 6px; align-items: center; }
+  .custom-pair input { flex: 1; padding: 10px 12px !important; font-size: 13px !important; }
+  .custom-pair .del-x { width: 32px; height: 32px; border-radius: 50%; background: #2a2a2a; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; }
+  .custom-add-btn { width: 100%; margin-top: 8px; padding: 10px; background: transparent; border: 1px dashed #444; border-radius: 10px; color: #888; font-size: 13px; }
   #live { position: fixed; inset: 0; display: none; }
   #live.active { display: block; }
-  #video {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; background: #000; transform: scaleX(-1);
-  }
+  #video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #000; transform: scaleX(-1); }
   #video.no-mirror { transform: none; }
-  .overlay-grad-top {
-    position: absolute; top: 0; left: 0; right: 0; height: 180px;
-    background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0));
-    pointer-events: none;
-  }
-  .overlay-grad-bottom {
-    position: absolute; bottom: 0; left: 0; right: 0; height: 280px;
-    background: linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0));
-    pointer-events: none;
-  }
-  .top-bar {
-    position: absolute;
-    top: max(12px, env(safe-area-inset-top));
-    left: 12px; right: 12px;
-    display: flex; align-items: center; gap: 8px; z-index: 5;
-  }
-  .profile-pill {
-    display: flex; align-items: center; gap: 10px;
-    background: rgba(0,0,0,0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    padding: 5px 12px 5px 5px; border-radius: 30px; flex: 1; min-width: 0;
-  }
-  .avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: var(--gradient); padding: 2px; flex-shrink: 0;
-  }
-  .avatar-inner {
-    width: 100%; height: 100%; border-radius: 50%;
-    background: #333; border: 2px solid #000;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-weight: 700; font-size: 13px;
-  }
+  .overlay-grad-top { position: absolute; top: 0; left: 0; right: 0; height: 180px; background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0)); pointer-events: none; }
+  .overlay-grad-bottom { position: absolute; bottom: 0; left: 0; right: 0; height: 280px; background: linear-gradient(0deg, rgba(0,0,0,0.6), rgba(0,0,0,0)); pointer-events: none; }
+  .top-bar { position: absolute; top: max(12px, env(safe-area-inset-top)); left: 12px; right: 12px; display: flex; align-items: center; gap: 8px; z-index: 5; }
+  .profile-pill { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 5px 12px 5px 5px; border-radius: 30px; flex: 1; min-width: 0; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--gradient); padding: 2px; flex-shrink: 0; }
+  .avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: #333; border: 2px solid #000; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; }
   .profile-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
-  .profile-name {
-    font-size: 13px; font-weight: 600;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    display: flex; align-items: center; gap: 4px;
-  }
-  .verified {
-    width: 12px; height: 12px;
-    background: #3897f0; border-radius: 50%;
-    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
+  .profile-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; }
+  .verified { width: 12px; height: 12px; background: #3897f0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .verified::before { content: '✓'; color: #fff; font-size: 8px; font-weight: 900; }
   .profile-meta { font-size: 11px; color: rgba(255,255,255,0.75); }
-  .live-badge {
-    background: var(--live-badge);
-    color: #fff; font-size: 11px; font-weight: 800;
-    padding: 5px 9px; border-radius: 6px; letter-spacing: 0.5px; flex-shrink: 0;
-  }
-  .viewers-pill {
-    display: flex; align-items: center; gap: 5px;
-    background: rgba(0,0,0,0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    padding: 7px 11px; border-radius: 30px;
-    font-size: 13px; font-weight: 600; flex-shrink: 0;
-  }
+  .live-badge { background: var(--live-badge); color: #fff; font-size: 11px; font-weight: 800; padding: 5px 9px; border-radius: 6px; letter-spacing: 0.5px; flex-shrink: 0; }
+  .viewers-pill { display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 7px 11px; border-radius: 30px; font-size: 13px; font-weight: 600; flex-shrink: 0; }
   .viewers-pill svg { width: 16px; height: 16px; }
-  .close-btn {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: rgba(0,0,0,0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
+  .close-btn { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .close-btn svg { width: 16px; height: 16px; }
-  .pinned-comment {
-    position: absolute; left: 12px; right: 12px;
-    top: calc(max(12px, env(safe-area-inset-top)) + 56px);
-    z-index: 4;
-    background: linear-gradient(90deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border-radius: 12px;
-    padding: 10px 12px;
-    display: flex; align-items: flex-start; gap: 8px;
-    border-left: 3px solid var(--accent-2);
-    animation: pinned-in 0.4s ease-out both;
-  }
-  @keyframes pinned-in {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  .pinned-comment { position: absolute; left: 12px; right: 12px; top: calc(max(12px, env(safe-area-inset-top)) + 56px); z-index: 4; background: linear-gradient(90deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 10px 12px; display: flex; align-items: flex-start; gap: 8px; border-left: 3px solid var(--accent-2); animation: pinned-in 0.4s ease-out both; }
+  @keyframes pinned-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
   .pinned-icon { font-size: 12px; color: var(--accent-1); flex-shrink: 0; margin-top: 1px; }
   .pinned-content { flex: 1; min-width: 0; font-size: 12px; }
-  .pinned-content .pinlabel {
-    font-size: 10px; color: var(--accent-1); font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;
-  }
+  .pinned-content .pinlabel { font-size: 10px; color: var(--accent-1); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
   .pinned-content .pintext { color: rgba(255,255,255,0.95); line-height: 1.3; }
-  .comments {
-    position: absolute;
-    left: 12px; right: 100px; bottom: 90px;
-    max-height: 50vh;
-    display: flex; flex-direction: column; justify-content: flex-end;
-    overflow: hidden; pointer-events: none; z-index: 4;
-    mask-image: linear-gradient(180deg, transparent 0%, black 25%);
-    -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 25%);
-  }
-  .comment {
-    display: flex; align-items: flex-start; gap: 8px;
-    margin-top: 10px;
-    animation: comment-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
-    max-width: 100%;
-  }
-  @keyframes comment-in {
-    from { opacity: 0; transform: translateY(14px) scale(0.96); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
+  .viewer-q-popup { position: absolute; left: 16px; right: 16px; top: calc(max(12px, env(safe-area-inset-top)) + 110px); z-index: 7; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 2px solid var(--accent-2); border-radius: 16px; padding: 14px 16px; display: flex; align-items: flex-start; gap: 10px; box-shadow: 0 10px 30px rgba(238, 42, 123, 0.4); animation: q-pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+  @keyframes q-pop { from { opacity: 0; transform: scale(0.85) translateY(-10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  .viewer-q-popup.closing { animation: q-out 0.3s ease-out both; }
+  @keyframes q-out { to { opacity: 0; transform: scale(0.9); } }
+  .viewer-q-popup .qlabel { font-size: 10px; color: var(--accent-1); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .viewer-q-popup .qname { font-weight: 700; font-size: 13px; color: #fff; display: inline-flex; align-items: center; gap: 4px; }
+  .viewer-q-popup .qtext { font-size: 14px; color: #fff; line-height: 1.35; margin-top: 2px; }
+  .comments { position: absolute; left: 12px; right: 100px; bottom: 90px; max-height: 50vh; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; pointer-events: none; z-index: 4; mask-image: linear-gradient(180deg, transparent 0%, black 25%); -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 25%); }
+  .comment { display: flex; align-items: flex-start; gap: 8px; margin-top: 10px; animation: comment-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; max-width: 100%; }
+  @keyframes comment-in { from { opacity: 0; transform: translateY(14px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
   .comment .avatar { width: 28px; height: 28px; }
   .comment .avatar-inner { font-size: 11px; }
-  .comment-body {
-    background: rgba(0,0,0,0.35);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    padding: 6px 11px; border-radius: 16px;
-    font-size: 13px; line-height: 1.35;
-    max-width: 100%; word-wrap: break-word;
-  }
-  .comment-body .name {
-    font-weight: 600; font-size: 12px;
-    color: rgba(255,255,255,0.9); margin-right: 6px;
-    display: inline-flex; align-items: center; gap: 3px;
-  }
+  .comment-body { background: rgba(0,0,0,0.35); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 6px 11px; border-radius: 16px; font-size: 13px; line-height: 1.35; max-width: 100%; word-wrap: break-word; }
+  .comment-body .name { font-weight: 600; font-size: 12px; color: rgba(255,255,255,0.9); margin-right: 6px; display: inline-flex; align-items: center; gap: 3px; }
   .comment-body .badge-crown { font-size: 11px; }
   .comment.event .comment-body { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); }
   .comment.event .comment-body .name { color: #fff; }
   .comment.donation { animation: donation-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
-  @keyframes donation-in {
-    from { opacity: 0; transform: translateY(20px) scale(0.85); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-  .comment.donation .comment-body {
-    background: var(--gradient);
-    box-shadow: 0 6px 22px rgba(238, 42, 123, 0.45);
-    border-radius: 18px; padding: 9px 14px; font-weight: 600;
-  }
+  @keyframes donation-in { from { opacity: 0; transform: translateY(20px) scale(0.85); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .comment.donation .comment-body { background: var(--gradient); box-shadow: 0 6px 22px rgba(238, 42, 123, 0.45); border-radius: 18px; padding: 9px 14px; font-weight: 600; }
   .comment.donation .comment-body .name { color: #fff; }
   .comment.donation .gift-emoji { font-size: 16px; margin-right: 4px; }
-  .hearts-area {
-    position: absolute; right: 0; bottom: 80px;
-    width: 80px; height: 60vh;
-    pointer-events: none; z-index: 3; overflow: hidden;
-  }
-  .heart {
-    position: absolute; bottom: 0; left: 50%;
-    font-size: 26px;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
-    will-change: transform, opacity;
-    animation: heart-rise 4s ease-out forwards;
-  }
-  @keyframes heart-rise {
-    0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; }
-    10% { transform: translate(-50%, -20px) scale(1.1); opacity: 1; }
-    100% { transform: translate(var(--drift, -50%), -100vh) scale(0.8) rotate(var(--rot, 0deg)); opacity: 0; }
-  }
-  .bottom-bar {
-    position: absolute;
-    bottom: max(12px, env(safe-area-inset-bottom));
-    left: 12px; right: 12px;
-    display: flex; align-items: center; gap: 8px; z-index: 5;
-  }
-  .keyword-input {
-    flex: 1; background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,255,255,0.25);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    padding: 11px 16px; border-radius: 30px;
-    font-size: 13px; color: #fff;
-    -webkit-appearance: none; appearance: none;
-  }
+  .comment.self.highlighted .comment-body { background: linear-gradient(90deg, rgba(238,42,123,0.22), rgba(98,40,215,0.22)); border: 1px solid rgba(238,42,123,0.5); }
+  .comment.self .comment-body .name { color: #fff; }
+  .hearts-area { position: absolute; right: 0; bottom: 80px; width: 80px; height: 60vh; pointer-events: none; z-index: 3; overflow: hidden; }
+  .heart { position: absolute; bottom: 0; left: 50%; font-size: 26px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4)); will-change: transform, opacity; animation: heart-rise 4s ease-out forwards; }
+  @keyframes heart-rise { 0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; } 10% { transform: translate(-50%, -20px) scale(1.1); opacity: 1; } 100% { transform: translate(var(--drift, -50%), -100vh) scale(0.8) rotate(var(--rot, 0deg)); opacity: 0; } }
+  .bottom-bar { position: absolute; bottom: max(12px, env(safe-area-inset-bottom)); left: 12px; right: 12px; display: flex; align-items: center; gap: 8px; z-index: 5; }
+  .keyword-input { flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.25); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 11px 16px; border-radius: 30px; font-size: 13px; color: #fff; -webkit-appearance: none; appearance: none; }
   .keyword-input::placeholder { color: rgba(255,255,255,0.6); }
-  .icon-btn {
-    width: 40px; height: 40px; border-radius: 50%;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
+  .icon-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.4); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .icon-btn svg { width: 22px; height: 22px; fill: #fff; }
   .icon-btn.mic.active { background: rgba(255,42,110,0.85); animation: mic-pulse 1.5s ease-in-out infinite; }
-  @keyframes mic-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(255,42,110,0.6); }
-    50% { box-shadow: 0 0 0 10px rgba(255,42,110,0); }
-  }
-  .reaction-buttons {
-    position: absolute;
-    right: 12px;
-    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 56px);
-    display: flex; flex-direction: column; gap: 8px;
-    z-index: 5;
-  }
-  .reaction-btn {
-    width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.15);
-    font-size: 20px;
-    display: flex; align-items: center; justify-content: center;
-    transition: transform 0.15s;
-  }
+  @keyframes mic-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,42,110,0.6); } 50% { box-shadow: 0 0 0 10px rgba(255,42,110,0); } }
+  .reaction-buttons { position: absolute; right: 12px; bottom: calc(max(12px, env(safe-area-inset-bottom)) + 56px); display: flex; flex-direction: column; gap: 8px; z-index: 5; }
+  .reaction-btn { width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.5); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.15); font-size: 20px; display: flex; align-items: center; justify-content: center; transition: transform 0.15s; }
   .reaction-btn:active { transform: scale(0.85); background: var(--gradient); }
-  .control-panel {
-    position: absolute;
-    top: calc(max(12px, env(safe-area-inset-top)) + 50px);
-    right: 12px; z-index: 6;
-    display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
-  }
-  .ctrl-btn {
-    background: rgba(0,0,0,0.55);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    color: #fff; font-size: 12px; font-weight: 600;
-    padding: 8px 14px; border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.15);
-  }
+  .control-panel { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + 50px); right: 12px; z-index: 6; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+  .ctrl-btn { background: rgba(0,0,0,0.55); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #fff; font-size: 12px; font-weight: 600; padding: 8px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); }
   .ctrl-btn.end { background: rgba(255, 42, 110, 0.85); }
-  .toast {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.85);
-    padding: 14px 22px; border-radius: 14px;
-    font-size: 14px; font-weight: 500; z-index: 20;
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    text-align: center; max-width: 80%;
-    animation: toast-in 0.3s ease-out;
-  }
+  .toast { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.85); padding: 14px 22px; border-radius: 14px; font-size: 14px; font-weight: 500; z-index: 20; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); text-align: center; max-width: 80%; animation: toast-in 0.3s ease-out; }
   @keyframes toast-in { from { opacity: 0; } to { opacity: 1; } }
-  .install-banner {
-    position: fixed; bottom: 12px; left: 12px; right: 12px;
-    background: rgba(20,20,20,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border: 1px solid #333; border-radius: 14px;
-    padding: 12px 14px; z-index: 200;
-    display: flex; align-items: center; gap: 10px;
-    font-size: 12px; line-height: 1.4;
-    animation: toast-in 0.4s ease-out;
-  }
-  .install-banner .x-banner {
-    background: #333; border-radius: 50%;
-    width: 22px; height: 22px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; font-size: 14px;
-  }
+  .install-banner { position: fixed; bottom: 12px; left: 12px; right: 12px; background: rgba(20,20,20,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid #333; border-radius: 14px; padding: 12px 14px; z-index: 200; display: flex; align-items: center; gap: 10px; font-size: 12px; line-height: 1.4; animation: toast-in 0.4s ease-out; }
+  .install-banner .x-banner { background: #333; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; }
 </style>
 </head>
 <body>
@@ -424,43 +174,28 @@
   <details>
     <summary>Activity Settings</summary>
     <div style="margin-top: 8px;">
-      <div class="toggle-row">
-        <div><span>Comments</span><span class="desc">Realistic chat scrolling by</span></div>
-        <label class="switch"><input type="checkbox" id="tComments" checked /><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <div><span>Voice activation</span><span class="desc">Comments react when you talk</span></div>
-        <label class="switch"><input type="checkbox" id="tVoice" checked /><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <div><span>Floating hearts</span><span class="desc">Hearts rise from corner</span></div>
-        <label class="switch"><input type="checkbox" id="tHearts" checked /><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <div><span>Donations / gifts</span><span class="desc">Roses, diamonds, rockets</span></div>
-        <label class="switch"><input type="checkbox" id="tDonations" checked /><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <div><span>Join notifications</span><span class="desc">"User joined" messages</span></div>
-        <label class="switch"><input type="checkbox" id="tJoins" checked /><span class="slider"></span></label>
-      </div>
-      <div class="toggle-row">
-        <div><span>Verified / top fan badges</span><span class="desc">Some get checks & crowns</span></div>
-        <label class="switch"><input type="checkbox" id="tBadges" checked /><span class="slider"></span></label>
-      </div>
-      <div class="slider-row">
-        <div class="lbl"><span>Comment speed</span><span class="v" id="speedVal">Normal</span></div>
-        <input type="range" id="speedRange" min="0" max="3" step="1" value="1" />
-      </div>
-      <div class="slider-row">
-        <div class="lbl"><span>Donation frequency</span><span class="v" id="donVal">Normal</span></div>
-        <input type="range" id="donRange" min="0" max="3" step="1" value="1" />
-      </div>
+      <div class="toggle-row"><div><span>Comments</span><span class="desc">Realistic chat scrolling by</span></div><label class="switch"><input type="checkbox" id="tComments" checked /><span class="slider"></span></label></div>
+      <div class="toggle-row"><div><span>Voice activation</span><span class="desc">Comments react when you talk</span></div><label class="switch"><input type="checkbox" id="tVoice" checked /><span class="slider"></span></label></div>
+      <div class="toggle-row"><div><span>Floating hearts</span><span class="desc">Hearts rise from corner</span></div><label class="switch"><input type="checkbox" id="tHearts" checked /><span class="slider"></span></label></div>
+      <div class="toggle-row"><div><span>Donations / gifts</span><span class="desc">Roses, diamonds, rockets</span></div><label class="switch"><input type="checkbox" id="tDonations" checked /><span class="slider"></span></label></div>
+      <div class="toggle-row"><div><span>Join notifications</span><span class="desc">"User joined" messages</span></div><label class="switch"><input type="checkbox" id="tJoins" checked /><span class="slider"></span></label></div>
+      <div class="toggle-row"><div><span>Verified / top fan badges</span><span class="desc">Some get checks & crowns</span></div><label class="switch"><input type="checkbox" id="tBadges" checked /><span class="slider"></span></label></div>
+      <div class="toggle-row"><div><span>Highlight my comments</span><span class="desc">Gradient border on your messages</span></div><label class="switch"><input type="checkbox" id="tHighlightSelf" checked /><span class="slider"></span></label></div>
+      <div class="slider-row"><div class="lbl"><span>Comment speed</span><span class="v" id="speedVal">Normal</span></div><input type="range" id="speedRange" min="0" max="3" step="1" value="1" /></div>
+      <div class="slider-row"><div class="lbl"><span>Donation frequency</span><span class="v" id="donVal">Normal</span></div><input type="range" id="donRange" min="0" max="3" step="1" value="1" /></div>
+    </div>
+  </details>
+  <details>
+    <summary>Custom keyword reactions</summary>
+    <div style="margin-top: 8px;">
+      <div style="font-size: 11px; color: #777; margin-bottom: 8px; line-height: 1.5;">Define your own bits. When you type/say the keyword, fans will reply with comma-separated reactions.</div>
+      <div id="customKwList"></div>
+      <button class="custom-add-btn" id="addCustomKw">+ Add custom keyword</button>
     </div>
   </details>
   <button id="goLive">Go Live</button>
   <div class="error-box" id="errorBox"></div>
-  <div class="hint">Tap the 🎤 mic on the live screen to enable voice reactions.<br>Or type keywords / use the quick reaction buttons.</div>
+  <div class="hint">Tap mic 🎤 for voice. Type anything — fans react to ANY message.<br>Use 6 reaction buttons or ❓ for fan questions.</div>
 </div>
 <div id="live">
   <video id="video" autoplay muted playsinline></video>
@@ -470,131 +205,141 @@
     <div class="profile-pill">
       <div class="avatar"><div class="avatar-inner" id="avatarInner">N</div></div>
       <div class="profile-text">
-        <div class="profile-name">
-          <span id="liveName">nabillion</span>
-          <span class="verified" id="liveVerified" style="display:none"></span>
-        </div>
+        <div class="profile-name"><span id="liveName">nabillion</span><span class="verified" id="liveVerified" style="display:none"></span></div>
         <div class="profile-meta" id="liveMeta">Live</div>
       </div>
       <div class="live-badge">LIVE</div>
     </div>
-    <div class="viewers-pill">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
-      <span id="viewerCount">0</span>
-    </div>
-    <button class="close-btn" id="closeBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
-    </button>
+    <div class="viewers-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span id="viewerCount">0</span></div>
+    <button class="close-btn" id="closeBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
   </div>
   <div class="pinned-comment" id="pinnedBox" style="display:none">
     <div class="pinned-icon">📌</div>
-    <div class="pinned-content">
-      <div class="pinlabel">Pinned</div>
-      <div class="pintext" id="pinnedText"></div>
-    </div>
+    <div class="pinned-content"><div class="pinlabel">Pinned</div><div class="pintext" id="pinnedText"></div></div>
   </div>
-  <div class="control-panel">
-    <button class="ctrl-btn end" id="endBtn">End Live</button>
-  </div>
+  <div class="control-panel"><button class="ctrl-btn end" id="endBtn">End Live</button></div>
   <div class="comments" id="comments"></div>
   <div class="hearts-area" id="hearts"></div>
   <div class="reaction-buttons">
     <button class="reaction-btn" data-mood="hype">🔥</button>
     <button class="reaction-btn" data-mood="love">😍</button>
     <button class="reaction-btn" data-mood="laugh">😂</button>
-    <button class="reaction-btn" data-mood="question">❓</button>
+    <button class="reaction-btn" data-mood="thanks">🙏</button>
     <button class="reaction-btn" data-mood="greet">👋</button>
     <button class="reaction-btn" data-mood="gift">🎁</button>
+    <button class="reaction-btn" id="vqBtn">❓</button>
   </div>
   <div class="bottom-bar">
-    <input type="text" class="keyword-input" id="keywordInput" placeholder="Type a topic (e.g. shoes)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-    <button class="icon-btn mic" id="micBtn">
-      <svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.92V21h2v-3.08A7 7 0 0019 11h-2z"/></svg>
-    </button>
-    <button class="icon-btn" id="heartBtn">
-      <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9C.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg>
-    </button>
+    <input type="text" class="keyword-input" id="keywordInput" placeholder="Say something — fans react" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    <button class="icon-btn mic" id="micBtn"><svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.92V21h2v-3.08A7 7 0 0019 11h-2z"/></svg></button>
+    <button class="icon-btn" id="heartBtn"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9C.5 8 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4 4.5 8C19 16.5 12 21 12 21z"/></svg></button>
   </div>
 </div>
 <div class="install-banner" id="installBanner" style="display:none">
-  <div style="flex:1">
-    <strong>Add to Home Screen</strong> for fullscreen app mode.<br>
-    Tap <span style="font-size:14px">⎋</span> Share → "Add to Home Screen"
-  </div>
+  <div style="flex:1"><strong>Add to Home Screen</strong> for fullscreen.<br>Tap <span style="font-size:14px">⎋</span> Share → "Add to Home Screen"</div>
   <button class="x-banner" id="dismissBanner">×</button>
 </div>
 <script>
 'use strict';
-const state = {
-  stream: null, isLive: false,
-  viewerCount: 0, viewerTarget: 10000,
-  username: 'nabillion', streamTitle: '', pinnedComment: '',
-  enableComments: true, enableHearts: true, enableDonations: true, enableJoins: true,
-  enableBadges: true, enableVoice: true,
-  facing: 'user', intervals: [],
-  theme: 'instagram',
-  speedTier: 1, donTier: 1,
-  badgeMap: new Map(),
-  recognition: null, voiceActive: false,
-};
+const state = { stream: null, isLive: false, viewerCount: 0, viewerTarget: 10000, username: 'nabillion', streamTitle: '', pinnedComment: '', enableComments: true, enableHearts: true, enableDonations: true, enableJoins: true, enableBadges: true, enableVoice: true, highlightSelf: true, facing: 'user', intervals: [], theme: 'instagram', speedTier: 1, donTier: 1, badgeMap: new Map(), recognition: null, voiceActive: false, customKeywords: [] };
 const speedMultipliers = [1.8, 1.0, 0.55, 0.3];
 const speedLabels = ['Slow', 'Normal', 'Fast', 'Insane'];
 const donRanges = [[60, 120], [25, 50], [10, 20], [4, 10]];
 const donLabels = ['Rare', 'Normal', 'Frequent', 'Constant'];
 const usernamePool = ['sarah_jpg','mikedoes','its_jenna','aaliyah.k','dom_b','tiffanyy','rico.suave','ash.lol','kimora.x','jaybird.94','milo.zz','priya_p','tito_v','lana.del','marcus.ig','dev_oh','ohh.brii','xx.alex','kev.in','noooor','sams.world','official.dre','its.nadia','elena_03','badrobotcam','shaez_','ts_kelly','imanioo','jaspr','wassupkenz','yokoo','reginalddd','babyybeans','ms.mira','officialroyy','tommyy.b','itzlulu','xander.q','bria_kay','danny.d','ferr.real','mochi.poke','samm_iam','yt.jordan','kate__bee','ralphhhh','luna.star.x','b.willz','cee.dot','mz.harper','hugo_real','tashiii','hennygirl','j.crooked','nashtyy','official.zay','chrishedge','iam.cammie','iyaana','bk.knight','elliotluvr','ohh.taylor','itzkris','rmsy.j','avaaaa.b','peeej_','viv.iann','gabbyglow','it.s.maya','therealnick','jpcasey','xxannie','maaark.b','heyyitssav','tommcphee','simba.x','pria_v','bria_xoxo','noor.91','msarjun','taylordreams','officialmoesh','dev_ito','rxxchel','julezjulez','ohh.lex','vee.the.don','lilcalvin','daniii.k','itz_jess','jet.li','jillsthrills','sneakerheadj','carla.q','xx.zee','hayleyy.b','mooonbeam','pookieee','c.hugo','officialmilan','ohh.tashi','b.rownie','jorts.guy'];
-const commentPool = ["yooo who's here","lets gooo","first!","🔥🔥🔥","stop ur so cute","where r u rn","ahh hi!!","👀👀","the lighting is insane","say hi to me pls","ur energy is everything","OMG","obsessed","❤️❤️❤️","drop a song rec","what cam u using","literally crying","i needed this today","i love u","👑","the way ur smiling","my fav person fr","pls do a q&a","tea?","where's the dog","i'm so early omg","vibes are immaculate","that lipstick tho","bestie","yas","this song slaps","💀💀💀","no bc same","iconic","i can't","✨","this is therapeutic ngl","where r u from?","sound is great","ur outfit >>>","talk to us","what perfume omg","u look so good wym","the camera quality","we love u","stream longer pls","i'm dying laughing","i'm in love","queen behavior","❤️","🥺","omg HI","mom said hi","i'm at work watching this lol","bye not me lurking","give us a tour","where did u get that","real","facts","okayyy","💯💯","hi from canada 🇨🇦","hi from london","hi from dubai 🇦🇪","hi from manila","hi from lagos","u up early","u up late tho","more lives plsss","do this every day","i'm hooked","energy >>>","wait u're so funny","ily ily ily","ur skin is glowing","what filter","the music omg","this is so chill","chat is moving fast lol","i was just thinking abt u","ur frenchie is so cute","🐶🐶🐶","ur so down to earth","rare W","stuck here forever","this is my comfort live","sending love from far away ❤️"];
+const commentPool = ["yooo who's here","lets gooo","first!","🔥🔥🔥","stop ur so cute","where r u rn","ahh hi!!","👀👀","the lighting is insane","say hi to me pls","ur energy is everything","OMG","obsessed","❤️❤️❤️","drop a song rec","what cam u using","literally crying","i needed this today","i love u","👑","the way ur smiling","my fav person fr","pls do a q&a","tea?","where's the dog","i'm so early omg","vibes are immaculate","that lipstick tho","bestie","yas","this song slaps","💀💀💀","no bc same","iconic","i can't","✨","this is therapeutic ngl","sound is great","ur outfit >>>","talk to us","what perfume omg","u look so good wym","the camera quality","we love u","stream longer pls","i'm dying laughing","i'm in love","queen behavior","❤️","🥺","omg HI","mom said hi","i'm at work watching this lol","bye not me lurking","real","facts","okayyy","💯💯","more lives plsss","i'm hooked","energy >>>","wait u're so funny","ily ily ily","ur skin is glowing","what filter","the music omg","this is so chill","chat is moving fast lol","i was just thinking abt u","ur frenchie is so cute","🐶🐶🐶","ur so down to earth","rare W","stuck here forever","this is my comfort live","sending love from far away ❤️"];
 const moodComments = {
   hype: ["LETS GOOO 🔥","BROO","NO WAYYY","stoppp","yessssss","🔥🔥🔥🔥","this is iconic","INSANE","im screaming","OMG OMG OMG","WOOOO","let him cook","the way im hyped","bestie WHAT","SHEESH","ON GOD","ur a real one","facts no printer","BANGER","goated","🚀🚀🚀","period queen","this song slapsss","the energy WOAH","i can't omg"],
-  love: ["i love u sm","ur literally my fav 🥺","mom hi","ur so beautiful","CRYING ur perfect","ur skin is glowing","u radiate","queen behavior","king energy","ily ily ily","heart eyes 😍","ur literally the best","obsessed w u","u carry me through life","my comfort person","i wld die for u fr","wife material","husband material","stop being so cute","u >>>"],
+  love: ["i love u sm","ur literally my fav 🥺","mom hi","ur so beautiful","CRYING ur perfect","ur skin is glowing","u radiate","queen behavior","king energy","ily ily ily","heart eyes 😍","ur literally the best","obsessed w u","u carry me through life","my comfort person","wife material","husband material","stop being so cute","u >>>"],
   laugh: ["💀💀💀","HELLPP","not me crying","im wheezing","stop im in public 😂","NO BC","the way i cackled","💀💀","im DECEASED","ok comedy career","u r unwell","ur insane","this is unhinged","CACKLING","ok funny guy","I CANT","my face hurts from laughing","sob","the audacity","ok stand up era"],
-  question: ["where r u from?","how old r u?","single?","what u do for work?","whats ur @","wym what??","wait what u mean","why tho","but why","huh??","drop the deets","explain pls","i need answers","spill","TEA?","go on...","wait i missed it","what filter is this","what ur skincare","what shampoo u use","name plsssss","drop the link","whats the song","where is that from"],
+  question: ["where r u from?","how old r u?","single?","what u do for work?","whats ur @","wym what??","wait what u mean","why tho","but why","huh??","drop the deets","explain pls","i need answers","spill","TEA?","go on...","what filter is this","what ur skincare","what shampoo u use","name plsssss","drop the link","whats the song","where is that from"],
   greet: ["HIIII","heyy bestie","omg HI","hi from canada 🇨🇦","hi from london","hi from dubai 🇦🇪","hi from manila","hi from nyc","hi from LA","hi from australia","hi from brazil 🇧🇷","first time here!","new follower 👋","hii from work lol","late but here","hello hello","ayyyy","hey love","mwah","whats up","yo whats good","hii queen"],
   gift: ["🌹 sent","💎 sent","🚀 sent","☕ sent","🎁 sent","🌹🌹🌹","just sent u something","check ur gifts","sent u my love","supporting always","love u biggest fan","for u 💖","take this 🥰","u deserve it"],
+  thanks: ["no thank YOU","ur welcome bestie","always 💖","anything for u","no thanks needed","ily","we love u","always here for u","u dont need to thank us","u >>>","mwah","biggest fan forever","grateful for u"],
+  agree: ["FACTS","real","100%","preach","u said it","exactly","omg yes","truth","ur so right","💯💯💯","said what u said","this","fr fr","period","real af"],
+  comfort: ["🥺🥺","aww babes","u got this","praying for u","sending love","its ok bestie","u deserve better","lots of love 💖","im here for u","whatever u need","stay strong","🫂🫂🫂","u r loved"],
+  reassure: ["NO ur stunning","stop ur perfect","u look amazing wym","dont say that","ur literally so pretty","wym ur a 10","stoppp","u always look good","🥺 ur perfect","ur fine babe","u radiate","u r enough"],
+  hype_back: ["GO OFF","preach","slay queen","real for that","king/queen behavior","ate","said what needed to be said","absolutely","stand on it","real","main character","speak ur truth"],
+  curious: ["go on...","tell us more","spill spill","details pls","👀👀","saying nothing rn","wait what","im listening","keep going","TEA??","pls elaborate","what happened","im invested"],
+  generic: ["yes go off","we hear u","say more","tell us","we're listening","👀","spillll","keep talking","im invested","keep going","ya ya ya","mhmm","go on","im here","SAY IT","ok and??","go off bestie","we're paying attention"],
 };
 const keywordReactions = {
   shoes: ["where did u get those","what brand??","drop the link!!","i NEED those","ur shoes >>>","what size","r they comfy","name pls","shoes go crazy"],
   outfit: ["where is that from","outfit OFF","drop the brand","what size r u","linkkk","ur style >>>","i need this fit","name brand pls","obsessed w that fit","whole look 🔥"],
-  food: ["what u eating","looks fire 🔥","send some over","recipe pls","im hungry now","what restaurant","whats that","is it good?","u always eating good food","name of the place pls"],
+  fit: ["whole fit OFF","drop the fit check","outfit god","what brand","where u shop","style icon"],
+  food: ["what u eating","looks fire 🔥","send some over","recipe pls","im hungry now","what restaurant","whats that","u always eating good food","name of the place pls"],
   music: ["who's this artist","drop the song","whats playin","SHAZAM","add to playlist","this slaps","name of the song","spotify link?","this is my new fav","🎵🎵🎵"],
-  song: ["who's this","name plsss","SHAZAM","this slaps","add to my playlist","drop the link","spotify?","new favvv","its on repeat now","this is fire"],
-  dog: ["🐶🐶🐶","ur dog is everything","name?","what breed","i need a dog","dog tax pls","i love him sm","puppy energy","best dog ever","🥺🥺🥺"],
-  cat: ["🐱🐱🐱","kitty!!","name?","what breed","pls more cat","cat tax","obsessed","baby","sweet bb","mwah"],
-  toronto: ["IM FROM TORONTO TOO","6ix gang","queen st?","yonge area","east end here","west side bestie","the 6","tdot 🇨🇦","hi from scarborough","etobicoke here"],
-  dubai: ["IM IN DUBAI TOO","marina or downtown?","palm jumeirah?","bestie which area","DXB 🇦🇪","ur in dubai??","weather is insane there rn","hi from JBR","im moving there!"],
-  london: ["IM IN LONDON","which side??","hi from camden","east london here","central baby","🇬🇧🇬🇧","brixton here","hackney","u in shoreditch?"],
-  newyork: ["NYC bestie","manhattan?","brooklyn here","queens what up","what borough","hi from harlem","🗽","west village?","the city >>>"],
-  tired: ["go SLEEP","ur working too hard","babes rest","take a nap","get u some sleep","go nap","ur giving exhausted bb","drink water","love u get rest"],
-  bored: ["lets do a q&a","play music","tell us a story","show us ur room","tour pls","do a get ready w me","lets play 21 questions","sing for us","entertain us"],
-  hungry: ["go eat!!!","what u craving","ordering uber eats?","make smth","cook for us","food asmr pls","what u making","im hungry too","let me eat with u"],
-  cold: ["bundle up bestie","stay warm 🥶","drink something hot","its freezing here too","brrr","cuddle weather","need a blankie"],
-  hot: ["its giving summer","ac rn","hydrate babes","its 30 here too","stay cool","drink water 💦","hottie energy"],
-  birthday: ["HAPPY BIRTHDAY 🎂","🎉🎉🎉","BESTIE","happy bday queen","cake time","make a wish","ur birthday twin here!","🥳🎂🎉"],
-  weekend: ["whats the plans","going out?","stay in bestie","brunch?","date night?","drinks soon?"],
-  monday: ["mood","i hate mondays","its only monday omg","this week is gonna be long","coffee me","mondays are evil"],
-  friday: ["FRIDAYY","friyay 🍻","weekend baby","drinks?","what ur plans","TGIF","🍷🍷🍷"],
-  like: ["like? FOLLOW","liked!!!","liked and shared","obvi liked","tap tap tap"],
-  follow: ["just followed!!","new follower 👋","followed back","followed forever","followed +shared"],
-  comment: ["commenting ❤️","were here","always commenting","ur biggest commenter"],
+  song: ["who's this","name plsss","SHAZAM","this slaps","add to my playlist","drop the link","spotify?","its on repeat now"],
+  dog: ["🐶🐶🐶","ur dog is everything","name?","what breed","i need a dog","dog tax pls","i love him sm","puppy energy","🥺🥺🥺"],
+  cat: ["🐱🐱🐱","kitty!!","name?","what breed","pls more cat","cat tax","obsessed","baby"],
+  toronto: ["IM FROM TORONTO TOO","6ix gang","queen st?","yonge area","east end here","the 6","tdot 🇨🇦","hi from scarborough"],
+  dubai: ["IM IN DUBAI TOO","marina or downtown?","palm jumeirah?","bestie which area","DXB 🇦🇪","ur in dubai??","hi from JBR"],
+  london: ["IM IN LONDON","which side??","hi from camden","east london here","central baby","🇬🇧🇬🇧","brixton here"],
+  newyork: ["NYC bestie","manhattan?","brooklyn here","queens what up","what borough","🗽","west village?"],
+  'new york': ["NYC bestie","manhattan?","brooklyn here","queens what up","what borough","🗽"],
+  paris: ["paris bestie 🇫🇷","jealous af","take pics","montmartre?","🥐🗼"],
+  tokyo: ["tokyo!!! 🇯🇵","jealous","shibuya?","food pics pls"],
+  tired: ["go SLEEP","ur working too hard","babes rest","take a nap","get u some sleep","ur giving exhausted bb","drink water","love u get rest"],
+  exhausted: ["go to bed 🥺","u been doing too much","rest babe","love u get sleep"],
+  bored: ["lets do a q&a","play music","tell us a story","show us ur room","tour pls","sing for us","entertain us"],
+  hungry: ["go eat!!!","what u craving","ordering uber eats?","make smth","cook for us","im hungry too"],
+  cold: ["bundle up bestie","stay warm 🥶","drink something hot","brrr","cuddle weather","need a blankie"],
+  hot: ["its giving summer","ac rn","hydrate babes","stay cool","drink water 💦"],
+  birthday: ["HAPPY BIRTHDAY 🎂","🎉🎉🎉","BESTIE","happy bday queen","cake time","make a wish","🥳🎂🎉"],
+  weekend: ["whats the plans","going out?","brunch?","date night?","drinks soon?"],
+  monday: ["mood","i hate mondays","its only monday omg","this week is gonna be long","mondays are evil"],
+  friday: ["FRIDAYY","friyay 🍻","weekend baby","drinks?","TGIF","🍷🍷🍷"],
+  saturday: ["saturday vibes","best day","what r u doing today"],
+  sunday: ["sunday reset","slow day","sunday scaries","brunch?"],
+  like: ["liked!!","liked and shared","obvi liked","tap tap tap"],
+  follow: ["just followed!!","new follower 👋","followed back","followed forever"],
   share: ["sharing!!","shared to my story","sent to all my friends","shared on tiktok"],
+  gym: ["GYM RAT","what u doing today","push pull legs?","share the routine","leg day??","im going too"],
+  workout: ["what r u doing for ur workout","share the plan","fitness era","push pull legs?","leg day","CARDIO?"],
+  running: ["how many miles","ur insane","i need to run too","share ur pace","runner girlie/guy"],
+  yoga: ["yoga era","whats ur fav pose","namaste 🧘","peaceful","ur energy >>"],
+  cooking: ["recipe???","drop the recipe","what u making","im hungry","share!!!"],
+  travel: ["where u going next","jealous","take me w u","passport ready","✈️✈️✈️"],
+  vacation: ["jealous","where r u going","take pics","have funnnn","✈️"],
+  flight: ["safe flight bestie","✈️","where to","jealous"],
+  beach: ["jealous","🌊🏖️","beach day vibes","take pics"],
+  pool: ["pool day 🏊","jealous","summer vibes","🌞🌞"],
+  coffee: ["coffee gang ☕","what u order","starbucks?","need coffee","i havent had mine yet"],
+  tea: ["tea time 🫖","what tea","spill the tea","🍵"],
+  wine: ["wine pls 🍷","cheers","what wine","drinking too 🍷"],
+  beer: ["cheers 🍻","what beer","drinking too"],
+  drunk: ["LMAO","stay safe","drunk live ftw","love a drunk live","drink water too","u r me rn"],
+  married: ["congrats 🎉","when??","wedding pics?","💍✨","mr & mrs","marriage era"],
+  engaged: ["CONGRATS 💍","WHEN","let us see the ring","💍💍💍","ahhh"],
+  single: ["same","party of one club","date me?","get u a partner","manifest love"],
+  dating: ["who??","drop the @","tea pls","details","go off"],
+  breakup: ["🥺 sending love","ur too good for them","next!!!","u deserve better","🫂"],
+  pregnant: ["CONGRATS 🤰","gender??","when due","babbbbyyyy","aw queen"],
+  work: ["wfh?","what u do","relate","corporate vibes","quit","9-5 mood"],
+  money: ["RICH ENERGY","we love a coin","get that bag","queen of finance"],
+  rich: ["WERE RICH","abundance era","secure the bag","💰💰"],
+  broke: ["same","rent week","mood","my account is sad too","pay day soon"],
+  mom: ["aw mom!! 🥰","hi mom","mom is iconic","cherish her","fav person fr"],
+  dad: ["aw dad!! 🥰","hi dad","dad jokes pls","cherish him"],
+  kids: ["kids are everything","🥺 mom/dad of the year","they're so cute","family fr"],
+  excited: ["YES BESTIE","im excited too","tell us!","🎉","go off","cant wait"],
+  nervous: ["u got this","breathe babe","u will be amazing","🤞","prayers up"],
+  scared: ["u got this","ur safe babe","im here for u","sending love"],
+  happy: ["HAPPINESS LOOKS GOOD","love this for u","ur glowing","contagious energy","good for u bestie"],
+  sad: ["🥺🥺","sending love","im here for u","bad days happen","tomorrow will be better","🫂"],
+  stressed: ["babe BREATHE","take a break","u will figure it out","one thing at a time","love u"],
+  guys: ["WE LOVE U","best chat ever","stan","grateful for u","u r the best"],
+  chat: ["the chat >>>","best chat","love this fam"],
+  joke: ["🤣🤣","NOT funny","ok comedian","stand up era","stop","im dying"],
+  serious: ["ok we're listening","spill","im invested","this is real","go on"],
+  story: ["TELL US","spill","start at the beginning","im on the edge of my seat","🍿🍿"],
+  truth: ["TEA","spill","go off","were ready"],
 };
-const giftPool = [
-  { emoji: '🌹', name: 'Rose' }, { emoji: '🍦', name: 'Ice Cream' },
-  { emoji: '☕', name: 'Coffee' }, { emoji: '🎁', name: 'Gift' },
-  { emoji: '💎', name: 'Diamond' }, { emoji: '🚀', name: 'Rocket' },
-  { emoji: '👑', name: 'Crown' }, { emoji: '🏆', name: 'Trophy' },
-  { emoji: '🦁', name: 'Lion' }, { emoji: '🐉', name: 'Dragon' },
-];
+const fanQuestions = ["what's your sign? ♋","are you single?","what's your skincare routine","where are you from originally?","what do you do for work?","favorite movie?","what's your fav restaurant?","best advice you've ever gotten?","biggest red flag?","biggest green flag?","iphone or android?","favorite city you've visited?","celebrity crush?","what's your morning routine?","early bird or night owl?","what's your fav song rn?","fav workout?","what r u manifesting this year?","biggest goal for this year?","do you believe in love at first sight?","what's something ppl don't know about you?","fav guilty pleasure?","introvert or extrovert?","coffee or tea?","what's your love language?","biggest pet peeve?","dream vacation?","fav comfort food?","what's your superpower would be?","best concert you've been to?","MBTI type?","fav podcast?","fav color?","if you could live anywhere, where?","fav book?","scariest thing you've done?"];
+const giftPool = [{ emoji: '🌹', name: 'Rose' },{ emoji: '🍦', name: 'Ice Cream' },{ emoji: '☕', name: 'Coffee' },{ emoji: '🎁', name: 'Gift' },{ emoji: '💎', name: 'Diamond' },{ emoji: '🚀', name: 'Rocket' },{ emoji: '👑', name: 'Crown' },{ emoji: '🏆', name: 'Trophy' },{ emoji: '🦁', name: 'Lion' },{ emoji: '🐉', name: 'Dragon' }];
 const giftMessages = ["love u!!","ur amazing","❤️❤️","for u queen","for u king","keep it up!","love this stream","ur the best","stay blessed","love and light","biggest fan!"];
 const $ = (id) => document.getElementById(id);
-document.querySelectorAll('.theme-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.theme-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    state.theme = tab.dataset.theme;
-    document.body.className = 'theme-' + state.theme;
-    saveSettings();
-  });
-});
+document.querySelectorAll('.theme-tab').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('.theme-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); state.theme = tab.dataset.theme; document.body.className = 'theme-' + state.theme; saveSettings(); }); });
 function loadProfiles() { try { const p = localStorage.getItem('liveProfiles'); return p ? JSON.parse(p) : []; } catch { return []; } }
 function saveProfiles(profiles) { try { localStorage.setItem('liveProfiles', JSON.stringify(profiles)); } catch {} }
 function loadActiveProfile() { try { return localStorage.getItem('liveActiveProfile') || ''; } catch { return ''; } }
@@ -610,21 +355,13 @@ function renderProfiles() {
     chip.innerHTML = `<span>${esc(p.username)}</span>`;
     const x = document.createElement('span');
     x.className = 'x'; x.textContent = '×';
-    x.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (confirm(`Delete profile "${p.username}"?`)) {
-        saveProfiles(profiles.filter(pp => pp.username !== p.username));
-        if (active === p.username) setActiveProfile('');
-        renderProfiles();
-      }
-    });
+    x.addEventListener('click', (e) => { e.stopPropagation(); if (confirm(`Delete profile "${p.username}"?`)) { saveProfiles(profiles.filter(pp => pp.username !== p.username)); if (active === p.username) setActiveProfile(''); renderProfiles(); } });
     chip.appendChild(x);
     chip.addEventListener('click', () => loadProfileIntoForm(p));
     bar.appendChild(chip);
   });
   const add = document.createElement('button');
-  add.className = 'profile-chip add';
-  add.textContent = '+ Save current';
+  add.className = 'profile-chip add'; add.textContent = '+ Save current';
   add.addEventListener('click', saveCurrentProfile);
   bar.appendChild(add);
 }
@@ -640,13 +377,12 @@ function loadProfileIntoForm(p) {
   $('tJoins').checked = p.enableJoins !== false;
   $('tBadges').checked = p.enableBadges !== false;
   $('tVoice').checked = p.enableVoice !== false;
+  $('tHighlightSelf').checked = p.highlightSelf !== false;
   $('speedRange').value = p.speedTier ?? 1;
   $('donRange').value = p.donTier ?? 1;
-  if (p.theme) {
-    document.querySelectorAll('.theme-tab').forEach(t => t.classList.toggle('active', t.dataset.theme === p.theme));
-    state.theme = p.theme;
-    document.body.className = 'theme-' + p.theme;
-  }
+  if (p.theme) { document.querySelectorAll('.theme-tab').forEach(t => t.classList.toggle('active', t.dataset.theme === p.theme)); state.theme = p.theme; document.body.className = 'theme-' + p.theme; }
+  state.customKeywords = p.customKeywords || [];
+  renderCustomKeywords();
   setActiveProfile(p.username);
   updateSliderLabels();
   renderProfiles();
@@ -654,22 +390,7 @@ function loadProfileIntoForm(p) {
 function saveCurrentProfile() {
   const username = $('username').value.trim();
   if (!username) return alert('Enter a username first');
-  const profile = {
-    username,
-    streamTitle: $('streamTitle').value.trim(),
-    pinnedComment: $('pinnedComment').value.trim(),
-    viewerTarget: $('viewerPreset').value,
-    facing: $('cameraSelect').value,
-    enableComments: $('tComments').checked,
-    enableHearts: $('tHearts').checked,
-    enableDonations: $('tDonations').checked,
-    enableJoins: $('tJoins').checked,
-    enableBadges: $('tBadges').checked,
-    enableVoice: $('tVoice').checked,
-    speedTier: parseInt($('speedRange').value, 10),
-    donTier: parseInt($('donRange').value, 10),
-    theme: state.theme,
-  };
+  const profile = { username, streamTitle: $('streamTitle').value.trim(), pinnedComment: $('pinnedComment').value.trim(), viewerTarget: $('viewerPreset').value, facing: $('cameraSelect').value, enableComments: $('tComments').checked, enableHearts: $('tHearts').checked, enableDonations: $('tDonations').checked, enableJoins: $('tJoins').checked, enableBadges: $('tBadges').checked, enableVoice: $('tVoice').checked, highlightSelf: $('tHighlightSelf').checked, speedTier: parseInt($('speedRange').value, 10), donTier: parseInt($('donRange').value, 10), theme: state.theme, customKeywords: state.customKeywords };
   let profiles = loadProfiles();
   profiles = profiles.filter(p => p.username !== username);
   profiles.push(profile);
@@ -678,69 +399,48 @@ function saveCurrentProfile() {
   renderProfiles();
   showToast('Profile saved');
 }
+function renderCustomKeywords() {
+  const list = $('customKwList');
+  list.innerHTML = '';
+  state.customKeywords.forEach((kw, idx) => {
+    const row = document.createElement('div');
+    row.className = 'custom-pair';
+    const kIn = document.createElement('input');
+    kIn.type = 'text'; kIn.placeholder = 'keyword'; kIn.value = kw.keyword;
+    kIn.addEventListener('input', () => { state.customKeywords[idx].keyword = kIn.value.toLowerCase().trim(); saveCustomKeywords(); });
+    const rIn = document.createElement('input');
+    rIn.type = 'text'; rIn.placeholder = 'reactions, comma separated'; rIn.value = kw.reactions;
+    rIn.addEventListener('input', () => { state.customKeywords[idx].reactions = rIn.value; saveCustomKeywords(); });
+    const del = document.createElement('button');
+    del.className = 'del-x'; del.textContent = '×';
+    del.addEventListener('click', () => { state.customKeywords.splice(idx, 1); saveCustomKeywords(); renderCustomKeywords(); });
+    row.appendChild(kIn); row.appendChild(rIn); row.appendChild(del);
+    list.appendChild(row);
+  });
+}
+function saveCustomKeywords() { try { localStorage.setItem('liveCustomKw', JSON.stringify(state.customKeywords)); } catch {} }
+function loadCustomKeywords() { try { const raw = localStorage.getItem('liveCustomKw'); if (raw) state.customKeywords = JSON.parse(raw); } catch {} }
+$('addCustomKw').addEventListener('click', () => { state.customKeywords.push({ keyword: '', reactions: '' }); renderCustomKeywords(); });
 function saveSettings() { try { localStorage.setItem('liveTheme', state.theme); } catch {} }
-function loadSettings() {
-  try {
-    const t = localStorage.getItem('liveTheme');
-    if (t) {
-      state.theme = t;
-      document.body.className = 'theme-' + t;
-      document.querySelectorAll('.theme-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.theme === t));
-    }
-  } catch {}
-}
-function updateSliderLabels() {
-  $('speedVal').textContent = speedLabels[parseInt($('speedRange').value, 10)];
-  $('donVal').textContent = donLabels[parseInt($('donRange').value, 10)];
-}
+function loadSettings() { try { const t = localStorage.getItem('liveTheme'); if (t) { state.theme = t; document.body.className = 'theme-' + t; document.querySelectorAll('.theme-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.theme === t)); } } catch {} }
+function updateSliderLabels() { $('speedVal').textContent = speedLabels[parseInt($('speedRange').value, 10)]; $('donVal').textContent = donLabels[parseInt($('donRange').value, 10)]; }
 $('speedRange').addEventListener('input', updateSliderLabels);
 $('donRange').addEventListener('input', updateSliderLabels);
 $('goLive').addEventListener('click', startLive);
 $('endBtn').addEventListener('click', endLive);
 $('closeBtn').addEventListener('click', endLive);
-$('heartBtn').addEventListener('click', () => {
-  for (let i = 0; i < 6; i++) setTimeout(() => spawnHeart(true), i * 80);
-});
-document.querySelectorAll('.reaction-btn').forEach(btn => {
-  btn.addEventListener('click', () => triggerMoodReaction(btn.dataset.mood));
-});
-$('keywordInput').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    const text = e.target.value.trim();
-    if (text) { processInput(text); e.target.value = ''; e.target.blur(); }
-  }
-});
+$('heartBtn').addEventListener('click', () => { for (let i = 0; i < 6; i++) setTimeout(() => spawnHeart(true), i * 80); });
+document.querySelectorAll('.reaction-btn[data-mood]').forEach(btn => { btn.addEventListener('click', () => triggerMoodReaction(btn.dataset.mood)); });
+$('vqBtn').addEventListener('click', showViewerQuestion);
+$('keywordInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') { const text = e.target.value.trim(); if (text) { sendUserMessage(text); e.target.value = ''; e.target.blur(); } } });
 $('micBtn').addEventListener('click', toggleVoice);
-function fmt(n) {
-  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
-  if (n >= 10_000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-  if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
-  return String(Math.floor(n));
-}
+function fmt(n) { if (n >= 1_000_000) return (n/1_000_000).toFixed(1).replace(/\.0$/,'')+'M'; if (n >= 10_000) return (n/1000).toFixed(1).replace(/\.0$/,'')+'K'; if (n >= 1000) return (n/1000).toFixed(1)+'K'; return String(Math.floor(n)); }
 function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-function avatarColor(seed) {
-  const palette = ['linear-gradient(135deg,#f093fb,#f5576c)','linear-gradient(135deg,#4facfe,#00f2fe)','linear-gradient(135deg,#43e97b,#38f9d7)','linear-gradient(135deg,#fa709a,#fee140)','linear-gradient(135deg,#30cfd0,#330867)','linear-gradient(135deg,#a8edea,#fed6e3)','linear-gradient(135deg,#ff9a9e,#fecfef)','linear-gradient(135deg,#ffecd2,#fcb045)','linear-gradient(135deg,#667eea,#764ba2)','linear-gradient(135deg,#ffafbd,#ffc3a0)'];
-  let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) | 0;
-  return palette[Math.abs(h) % palette.length];
-}
+function avatarColor(seed) { const palette = ['linear-gradient(135deg,#f093fb,#f5576c)','linear-gradient(135deg,#4facfe,#00f2fe)','linear-gradient(135deg,#43e97b,#38f9d7)','linear-gradient(135deg,#fa709a,#fee140)','linear-gradient(135deg,#30cfd0,#330867)','linear-gradient(135deg,#a8edea,#fed6e3)','linear-gradient(135deg,#ff9a9e,#fecfef)','linear-gradient(135deg,#ffecd2,#fcb045)','linear-gradient(135deg,#667eea,#764ba2)','linear-gradient(135deg,#ffafbd,#ffc3a0)']; let h = 0; for (const c of seed) h = (h*31+c.charCodeAt(0))|0; return palette[Math.abs(h)%palette.length]; }
 function esc(s) { return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function getBadge(name) {
-  if (!state.enableBadges) return null;
-  if (state.badgeMap.has(name)) return state.badgeMap.get(name);
-  const r = Math.random();
-  let badge = null;
-  if (r < 0.07) badge = 'verified';
-  else if (r < 0.12) badge = 'crown';
-  state.badgeMap.set(name, badge);
-  return badge;
-}
-function showToast(msg, ms = 2200) {
-  const t = document.createElement('div');
-  t.className = 'toast'; t.textContent = msg;
-  (state.isLive ? $('live') : $('setup')).appendChild(t);
-  setTimeout(() => t.remove(), ms);
-}
+function getBadge(name) { if (!state.enableBadges) return null; if (state.badgeMap.has(name)) return state.badgeMap.get(name); const r = Math.random(); let badge = null; if (r < 0.07) badge = 'verified'; else if (r < 0.12) badge = 'crown'; state.badgeMap.set(name, badge); return badge; }
+function showToast(msg, ms = 2200) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; (state.isLive ? $('live') : $('setup')).appendChild(t); setTimeout(() => t.remove(), ms); }
 function showError(msg) { const box = $('errorBox'); box.textContent = msg; box.classList.add('show'); }
 function hideError() { $('errorBox').classList.remove('show'); }
 async function startLive() {
@@ -757,26 +457,13 @@ async function startLive() {
   state.enableJoins = $('tJoins').checked;
   state.enableBadges = $('tBadges').checked;
   state.enableVoice = $('tVoice').checked;
+  state.highlightSelf = $('tHighlightSelf').checked;
   state.speedTier = parseInt($('speedRange').value, 10);
   state.donTier = parseInt($('donRange').value, 10);
   state.badgeMap.clear();
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    btn.disabled = false; btn.textContent = 'Go Live';
-    showError('Camera not available. Open over https://');
-    return;
-  }
-  try {
-    state.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: state.facing }, audio: true });
-  } catch (err) {
-    btn.disabled = false; btn.textContent = 'Go Live';
-    let msg = '';
-    if (err.name === 'NotAllowedError') msg = 'Permission denied. Reload and allow camera/mic.';
-    else if (err.name === 'NotFoundError') msg = 'No camera found.';
-    else if (err.name === 'NotReadableError') msg = 'Camera busy. Close other apps using it.';
-    else msg = (err.name || 'Error') + ': ' + (err.message || err);
-    showError(msg);
-    return;
-  }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { btn.disabled = false; btn.textContent = 'Go Live'; showError('Camera not available. Open over https://'); return; }
+  try { state.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: state.facing }, audio: true }); }
+  catch (err) { btn.disabled = false; btn.textContent = 'Go Live'; let msg = ''; if (err.name === 'NotAllowedError') msg = 'Permission denied. Reload and allow camera/mic.'; else if (err.name === 'NotFoundError') msg = 'No camera found.'; else if (err.name === 'NotReadableError') msg = 'Camera busy. Close other apps using it.'; else msg = (err.name || 'Error') + ': ' + (err.message || err); showError(msg); return; }
   $('video').srcObject = state.stream;
   $('video').classList.toggle('no-mirror', state.facing !== 'user');
   $('liveName').textContent = state.username;
@@ -784,12 +471,7 @@ async function startLive() {
   $('avatarInner').textContent = state.username.charAt(0).toUpperCase();
   $('avatarInner').style.background = avatarColor(state.username);
   $('liveVerified').style.display = 'inline-flex';
-  if (state.pinnedComment) {
-    $('pinnedText').textContent = state.pinnedComment;
-    $('pinnedBox').style.display = 'flex';
-  } else {
-    $('pinnedBox').style.display = 'none';
-  }
+  if (state.pinnedComment) { $('pinnedText').textContent = state.pinnedComment; $('pinnedBox').style.display = 'flex'; } else { $('pinnedBox').style.display = 'none'; }
   $('setup').style.display = 'none';
   $('live').classList.add('active');
   state.isLive = true;
@@ -814,14 +496,7 @@ function rampViewers() {
     updateViewerDisplay();
     if (progress >= 1) {
       clearInterval(rampInterval);
-      const fluxInterval = setInterval(() => {
-        if (!state.isLive) return clearInterval(fluxInterval);
-        const drift = (Math.random() - 0.45) * state.viewerTarget * 0.015;
-        state.viewerCount = Math.max(1, Math.floor(state.viewerCount + drift));
-        if (Math.random() < 0.04) state.viewerCount += randInt(50, Math.max(100, Math.floor(state.viewerTarget * 0.03)));
-        state.viewerCount = Math.min(state.viewerCount, Math.floor(state.viewerTarget * 1.4));
-        updateViewerDisplay();
-      }, 1500);
+      const fluxInterval = setInterval(() => { if (!state.isLive) return clearInterval(fluxInterval); const drift = (Math.random() - 0.45) * state.viewerTarget * 0.015; state.viewerCount = Math.max(1, Math.floor(state.viewerCount + drift)); if (Math.random() < 0.04) state.viewerCount += randInt(50, Math.max(100, Math.floor(state.viewerTarget * 0.03))); state.viewerCount = Math.min(state.viewerCount, Math.floor(state.viewerTarget * 1.4)); updateViewerDisplay(); }, 1500);
       state.intervals.push(fluxInterval);
     }
   }, 250);
@@ -830,54 +505,21 @@ function rampViewers() {
 function startActivity() {
   const speedMult = speedMultipliers[state.speedTier];
   const baseDelay = Math.max(450, 2200 - Math.log10(state.viewerTarget) * 280) * speedMult;
-  function scheduleComment() {
-    if (!state.isLive) return;
-    const delay = baseDelay * (0.5 + Math.random());
-    setTimeout(() => {
-      if (!state.isLive) return;
-      const r = Math.random();
-      if (state.enableJoins && r < 0.12) addJoinEvent();
-      else if (state.enableComments) addComment();
-      scheduleComment();
-    }, delay);
-  }
+  function scheduleComment() { if (!state.isLive) return; const delay = baseDelay * (0.5 + Math.random()); setTimeout(() => { if (!state.isLive) return; const r = Math.random(); if (state.enableJoins && r < 0.12) addJoinEvent(); else if (state.enableComments) addComment(); scheduleComment(); }, delay); }
   scheduleComment();
-  if (state.enableHearts) {
-    const heartInterval = setInterval(() => {
-      if (!state.isLive) return;
-      const count = randInt(1, 3);
-      for (let i = 0; i < count; i++) setTimeout(() => spawnHeart(false), i * 150);
-    }, 1100);
-    state.intervals.push(heartInterval);
-  }
-  if (state.enableDonations) {
-    const [minS, maxS] = donRanges[state.donTier];
-    function scheduleDonation() {
-      if (!state.isLive) return;
-      const delay = randInt(minS * 1000, maxS * 1000);
-      setTimeout(() => { if (!state.isLive) return; addDonation(); scheduleDonation(); }, delay);
-    }
-    setTimeout(scheduleDonation, randInt(5000, 12000));
-  }
+  if (state.enableHearts) { const heartInterval = setInterval(() => { if (!state.isLive) return; const count = randInt(1, 3); for (let i = 0; i < count; i++) setTimeout(() => spawnHeart(false), i * 150); }, 1100); state.intervals.push(heartInterval); }
+  if (state.enableDonations) { const [minS, maxS] = donRanges[state.donTier]; function scheduleDonation() { if (!state.isLive) return; const delay = randInt(minS * 1000, maxS * 1000); setTimeout(() => { if (!state.isLive) return; addDonation(); scheduleDonation(); }, delay); } setTimeout(scheduleDonation, randInt(5000, 12000)); }
 }
 function addComment() { appendComment({ name: rand(usernamePool), text: rand(commentPool), type: 'normal' }); }
-function addJoinEvent() {
-  const name = rand(usernamePool);
-  const txt = Math.random() < 0.5 ? 'joined' : 'started following';
-  appendComment({ name, joinText: txt, type: 'event' });
-}
-function addDonation() {
-  const name = rand(usernamePool);
-  const gift = rand(giftPool);
-  const msg = Math.random() < 0.6 ? rand(giftMessages) : '';
-  appendComment({ name, text: msg, gift, type: 'donation' });
-  state.viewerCount += randInt(5, 30);
-  updateViewerDisplay();
-  for (let i = 0; i < 8; i++) setTimeout(() => spawnHeart(false), i * 70);
-}
-function appendComment({ name, text, type, gift, joinText }) {
+function addJoinEvent() { const name = rand(usernamePool); const txt = Math.random() < 0.5 ? 'joined' : 'started following'; appendComment({ name, joinText: txt, type: 'event' }); }
+function addDonation() { const name = rand(usernamePool); const gift = rand(giftPool); const msg = Math.random() < 0.6 ? rand(giftMessages) : ''; appendComment({ name, text: msg, gift, type: 'donation' }); state.viewerCount += randInt(5, 30); updateViewerDisplay(); for (let i = 0; i < 8; i++) setTimeout(() => spawnHeart(false), i * 70); }
+function appendComment({ name, text, type, gift, joinText, isSelf }) {
   const el = document.createElement('div');
-  el.className = 'comment' + (type === 'event' ? ' event' : '') + (type === 'donation' ? ' donation' : '');
+  let cls = 'comment';
+  if (type === 'event') cls += ' event';
+  if (type === 'donation') cls += ' donation';
+  if (isSelf) { cls += ' self'; if (state.highlightSelf) cls += ' highlighted'; }
+  el.className = cls;
   const avatar = document.createElement('div');
   avatar.className = 'avatar';
   const inner = document.createElement('div');
@@ -885,160 +527,108 @@ function appendComment({ name, text, type, gift, joinText }) {
   inner.textContent = name.charAt(0).toUpperCase();
   inner.style.background = avatarColor(name);
   avatar.appendChild(inner);
-  const badge = getBadge(name);
   let badgeHtml = '';
-  if (badge === 'verified') badgeHtml = ' <span class="verified"></span>';
-  else if (badge === 'crown') badgeHtml = ' <span class="badge-crown">👑</span>';
+  if (isSelf) { badgeHtml = ' <span class="verified"></span>'; }
+  else { const badge = getBadge(name); if (badge === 'verified') badgeHtml = ' <span class="verified"></span>'; else if (badge === 'crown') badgeHtml = ' <span class="badge-crown">👑</span>'; }
   const body = document.createElement('div');
   body.className = 'comment-body';
-  if (type === 'donation') {
-    body.innerHTML = `<span class="name">${esc(name)}${badgeHtml}</span> sent <span class="gift-emoji">${gift.emoji}</span>${esc(gift.name)}${text ? ' · ' + esc(text) : ''}`;
-  } else if (type === 'event') {
-    body.innerHTML = `<span class="name">${esc(name)}${badgeHtml}</span> ${esc(joinText)}`;
-  } else {
-    body.innerHTML = `<span class="name">${esc(name)}${badgeHtml}</span>${esc(text)}`;
-  }
+  if (type === 'donation') body.innerHTML = `<span class="name">${esc(name)}${badgeHtml}</span> sent <span class="gift-emoji">${gift.emoji}</span>${esc(gift.name)}${text ? ' · ' + esc(text) : ''}`;
+  else if (type === 'event') body.innerHTML = `<span class="name">${esc(name)}${badgeHtml}</span> ${esc(joinText)}`;
+  else body.innerHTML = `<span class="name">${esc(name)}${badgeHtml}</span>${esc(text)}`;
   el.appendChild(avatar); el.appendChild(body);
   $('comments').appendChild(el);
   while ($('comments').children.length > 12) $('comments').removeChild($('comments').firstChild);
 }
-function spawnHeart(fromTap) {
-  const colors = ['❤️','🧡','💛','💚','💙','💜','🤍','💖','💗'];
-  const h = document.createElement('div');
-  h.className = 'heart';
-  h.textContent = rand(colors);
-  h.style.left = randInt(20, 60) + 'px';
-  h.style.setProperty('--drift', `calc(-50% + ${randInt(-80, 30)}px)`);
-  h.style.setProperty('--rot', randInt(-30, 30) + 'deg');
-  if (fromTap) h.style.fontSize = '32px';
-  $('hearts').appendChild(h);
-  setTimeout(() => h.remove(), 4200);
+function spawnHeart(fromTap) { const colors = ['❤️','🧡','💛','💚','💙','💜','🤍','💖','💗']; const h = document.createElement('div'); h.className = 'heart'; h.textContent = rand(colors); h.style.left = randInt(20, 60) + 'px'; h.style.setProperty('--drift', `calc(-50% + ${randInt(-80, 30)}px)`); h.style.setProperty('--rot', randInt(-30, 30) + 'deg'); if (fromTap) h.style.fontSize = '32px'; $('hearts').appendChild(h); setTimeout(() => h.remove(), 4200); }
+function triggerMoodReaction(mood) { const pool = moodComments[mood]; if (!pool) return; const count = randInt(4, 7); for (let i = 0; i < count; i++) { setTimeout(() => { if (!state.isLive) return; const name = rand(usernamePool); const text = rand(pool); if (mood === 'gift') { const gift = rand(giftPool); appendComment({ name, text: '', gift, type: 'donation' }); state.viewerCount += randInt(2, 8); updateViewerDisplay(); } else { appendComment({ name, text, type: 'normal' }); } }, i * randInt(180, 450)); } for (let i = 0; i < 5; i++) setTimeout(() => spawnHeart(false), i * 100); }
+function detectIntent(text) {
+  const t = text.toLowerCase().trim();
+  const hasQuestionMark = /\?/.test(t);
+  const isCaps = text.length > 4 && text === text.toUpperCase() && /[A-Z]/.test(text);
+  const isLol = /\b(lol|lmao|haha|hahaha|lmfao|rofl)\b|😂|🤣|💀/.test(t);
+  if (/^(hi|hey|hello|yo|sup|wassup|whats up|what's up|hii|heyy|good morning|good evening|good afternoon)\b/.test(t)) return 'greet';
+  if (/\b(thank you|thanks|tysm|ty|appreciate)\b/.test(t)) return 'thanks';
+  if (hasQuestionMark || /^(who|what|where|when|why|how|do you|did you|are you|is it|can you|should i|would you)\b/.test(t)) return 'curious';
+  if (/\b(i look (bad|tired|terrible|ugly)|i feel ugly|i'?m so (tired|exhausted|done|ugly))\b/.test(t)) return 'reassure';
+  if (/\b(sad|cry|crying|hate|tired|exhausted|stressed|anxious|depressed|down|upset|broken|hurt|miss|missing)\b/.test(t)) return 'comfort';
+  if (/\b(love (you|u|yall|y'?all|you guys|u guys)|you guys are|u guys are|chat is|best chat|love this fam)\b/.test(t)) return 'love_back';
+  if (isCaps || /!{2,}|🔥|🎉|excited|amazing|incredible|insane|crazy|wild/.test(t)) return 'hype_back';
+  if (isLol) return 'laugh';
+  if (/^i\s/.test(t) || /\b(i think|i feel|i love|i hate|i want|i need|i'm|im )\b/.test(t)) return 'agree';
+  return 'generic';
 }
-function triggerMoodReaction(mood) {
-  const pool = moodComments[mood];
-  if (!pool) return;
-  const count = randInt(4, 7);
-  for (let i = 0; i < count; i++) {
-    setTimeout(() => {
-      if (!state.isLive) return;
-      const name = rand(usernamePool);
-      const text = rand(pool);
-      if (mood === 'gift') {
-        const gift = rand(giftPool);
-        appendComment({ name, text: '', gift, type: 'donation' });
-        state.viewerCount += randInt(2, 8);
-        updateViewerDisplay();
-      } else {
-        appendComment({ name, text, type: 'normal' });
-      }
-    }, i * randInt(180, 450));
-  }
-  for (let i = 0; i < 5; i++) setTimeout(() => spawnHeart(false), i * 100);
+function sendUserMessage(text) {
+  appendComment({ name: state.username, text, type: 'normal', isSelf: true });
+  for (let i = 0; i < 3; i++) setTimeout(() => spawnHeart(false), i * 120);
+  setTimeout(() => processInput(text), randInt(400, 900));
 }
 function processInput(text) {
   const lower = text.toLowerCase();
-  const matched = [];
+  let pool = [];
+  for (const kw of state.customKeywords) {
+    if (kw.keyword && lower.includes(kw.keyword)) {
+      const reactions = kw.reactions.split(',').map(r => r.trim()).filter(Boolean);
+      pool.push(...reactions);
+    }
+  }
   for (const [key, comments] of Object.entries(keywordReactions)) {
-    if (lower.includes(key)) matched.push(...comments);
+    if (lower.includes(key)) pool.push(...comments);
   }
-  if (matched.length === 0) {
-    const fallback = ["wait what","wym?","huh??","i missed it","say again","didnt catch that","🤔","what was that","wait wait wait"];
-    const mixed = [...fallback, ...commentPool.slice(0, 30)];
-    fireCommentBurst(mixed, randInt(2, 4));
-    return;
-  }
-  fireCommentBurst(matched, randInt(4, 8));
-}
-function fireCommentBurst(pool, count) {
+  const intent = detectIntent(text);
+  const intentMap = { greet: 'greet', thanks: 'thanks', curious: 'curious', reassure: 'reassure', comfort: 'comfort', love_back: 'love', hype_back: 'hype_back', laugh: 'laugh', agree: 'agree', generic: 'generic' };
+  const moodKey = intentMap[intent] || 'generic';
+  const moodPool = moodComments[moodKey] || moodComments.generic;
+  pool.push(...moodPool);
+  pool.push(...moodComments.generic.slice(0, 6));
+  const count = randInt(5, 9);
   for (let i = 0; i < count; i++) {
-    setTimeout(() => {
-      if (!state.isLive) return;
-      const name = rand(usernamePool);
-      const text = rand(pool);
-      appendComment({ name, text, type: 'normal' });
-    }, i * randInt(200, 500));
+    setTimeout(() => { if (!state.isLive) return; const name = rand(usernamePool); const txt = rand(pool); appendComment({ name, text: txt, type: 'normal' }); }, 200 + i * randInt(180, 480));
   }
+  for (let i = 0; i < 4; i++) setTimeout(() => spawnHeart(false), i * 150);
 }
-function toggleVoice() {
-  if (state.voiceActive) stopVoice();
-  else startVoice();
+function showViewerQuestion() {
+  if (!state.isLive) return;
+  const existing = document.querySelector('.viewer-q-popup');
+  if (existing) existing.remove();
+  const name = rand(usernamePool);
+  const question = rand(fanQuestions);
+  const popup = document.createElement('div');
+  popup.className = 'viewer-q-popup';
+  const badge = getBadge(name);
+  let badgeHtml = '';
+  if (badge === 'verified') badgeHtml = ' <span class="verified"></span>';
+  else if (badge === 'crown') badgeHtml = ' <span class="badge-crown">👑</span>';
+  popup.innerHTML = `<div class="avatar" style="width:36px;height:36px"><div class="avatar-inner" style="font-size:13px;background:${avatarColor(name)}">${name.charAt(0).toUpperCase()}</div></div><div style="flex:1;min-width:0"><div class="qlabel">Question from a viewer</div><div><span class="qname">${esc(name)}${badgeHtml}</span></div><div class="qtext">${esc(question)}</div></div>`;
+  $('live').appendChild(popup);
+  popup.addEventListener('click', () => closePopup(popup));
+  setTimeout(() => closePopup(popup), 8000);
+  appendComment({ name, text: question, type: 'normal' });
 }
+function closePopup(popup) { if (!popup || !popup.parentNode) return; popup.classList.add('closing'); setTimeout(() => popup.remove(), 300); }
+function toggleVoice() { if (state.voiceActive) stopVoice(); else startVoice(); }
 function startVoice() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) {
-    showToast('Voice not supported. Use buttons or typing.', 2800);
-    return;
-  }
+  if (!SR) { showToast('Voice not supported. Use buttons or typing.', 2800); return; }
   try {
     const rec = new SR();
-    rec.continuous = true;
-    rec.interimResults = true;
-    rec.lang = 'en-US';
-    rec.onresult = (e) => {
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        const result = e.results[i];
-        if (result.isFinal) {
-          const txt = result[0].transcript.trim();
-          if (txt) processInput(txt);
-        }
-      }
-    };
-    rec.onerror = (e) => {
-      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-        showToast('Mic permission denied');
-        stopVoice();
-      }
-    };
-    rec.onend = () => {
-      if (state.voiceActive) {
-        try { rec.start(); } catch {}
-      }
-    };
+    rec.continuous = true; rec.interimResults = true; rec.lang = 'en-US';
+    rec.onresult = (e) => { for (let i = e.resultIndex; i < e.results.length; i++) { const result = e.results[i]; if (result.isFinal) { const txt = result[0].transcript.trim(); if (txt && txt.length > 2) processInput(txt); } } };
+    rec.onerror = (e) => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { showToast('Mic permission denied'); stopVoice(); } };
+    rec.onend = () => { if (state.voiceActive) { try { rec.start(); } catch {} } };
     rec.start();
-    state.recognition = rec;
-    state.voiceActive = true;
+    state.recognition = rec; state.voiceActive = true;
     $('micBtn').classList.add('active');
     showToast('🎤 Voice active — speak naturally', 2200);
-  } catch (err) {
-    showToast('Voice failed: ' + (err.message || err));
-  }
+  } catch (err) { showToast('Voice failed: ' + (err.message || err)); }
 }
-function stopVoice() {
-  if (state.recognition) {
-    try { state.recognition.stop(); } catch {}
-    state.recognition = null;
-  }
-  state.voiceActive = false;
-  $('micBtn').classList.remove('active');
-}
-function endLive() {
-  state.isLive = false;
-  stopVoice();
-  state.intervals.forEach(clearInterval);
-  state.intervals = [];
-  if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; }
-  $('video').srcObject = null;
-  $('live').classList.remove('active');
-  $('setup').style.display = '';
-  $('comments').innerHTML = '';
-  $('hearts').innerHTML = '';
-  $('liveVerified').style.display = 'none';
-  $('keywordInput').value = '';
-}
-function maybeShowInstallBanner() {
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  const dismissed = localStorage.getItem('installDismissed');
-  if (isIOS && !isStandalone && !dismissed) {
-    setTimeout(() => $('installBanner').style.display = 'flex', 1500);
-  }
-}
-$('dismissBanner').addEventListener('click', () => {
-  $('installBanner').style.display = 'none';
-  try { localStorage.setItem('installDismissed', '1'); } catch {}
-});
+function stopVoice() { if (state.recognition) { try { state.recognition.stop(); } catch {} state.recognition = null; } state.voiceActive = false; $('micBtn').classList.remove('active'); }
+function endLive() { state.isLive = false; stopVoice(); state.intervals.forEach(clearInterval); state.intervals = []; if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; } $('video').srcObject = null; $('live').classList.remove('active'); $('setup').style.display = ''; $('comments').innerHTML = ''; $('hearts').innerHTML = ''; $('liveVerified').style.display = 'none'; $('keywordInput').value = ''; document.querySelectorAll('.viewer-q-popup').forEach(p => p.remove()); }
+function maybeShowInstallBanner() { const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent); const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone; const dismissed = localStorage.getItem('installDismissed'); if (isIOS && !isStandalone && !dismissed) { setTimeout(() => $('installBanner').style.display = 'flex', 1500); } }
+$('dismissBanner').addEventListener('click', () => { $('installBanner').style.display = 'none'; try { localStorage.setItem('installDismissed', '1'); } catch {} });
 loadSettings();
+loadCustomKeywords();
 renderProfiles();
+renderCustomKeywords();
 updateSliderLabels();
 maybeShowInstallBanner();
 window.addEventListener('beforeunload', (e) => { if (state.isLive) { e.preventDefault(); e.returnValue = ''; } });
