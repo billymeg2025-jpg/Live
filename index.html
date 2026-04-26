@@ -11,12 +11,7 @@
 <title>Live</title>
 <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23f9ce34'/><stop offset='0.5' stop-color='%23ee2a7b'/><stop offset='1' stop-color='%236228d7'/></linearGradient></defs><rect width='180' height='180' rx='40' fill='url(%23g)'/><circle cx='90' cy='90' r='30' fill='white'/><circle cx='90' cy='90' r='12' fill='url(%23g)'/></svg>" />
 <style>
-  :root {
-    --accent-1: #f9ce34; --accent-2: #ee2a7b; --accent-3: #6228d7;
-    --gradient: linear-gradient(45deg, var(--accent-1), var(--accent-2), var(--accent-3));
-    --live-badge: linear-gradient(45deg, #ff2a6e, #ff5945);
-    --bg-bottom: #1a0a1a;
-  }
+  :root { --accent-1: #f9ce34; --accent-2: #ee2a7b; --accent-3: #6228d7; --gradient: linear-gradient(45deg, var(--accent-1), var(--accent-2), var(--accent-3)); --live-badge: linear-gradient(45deg, #ff2a6e, #ff5945); --bg-bottom: #1a0a1a; }
   body.theme-tiktok { --accent-1: #25f4ee; --accent-2: #ffffff; --accent-3: #fe2c55; --gradient: linear-gradient(45deg, #25f4ee, #fe2c55); --live-badge: #fe2c55; --bg-bottom: #0a0a0a; }
   body.theme-youtube { --accent-1: #ff0000; --accent-2: #ff4444; --accent-3: #cc0000; --gradient: linear-gradient(45deg, #ff0000, #cc0000); --live-badge: #ff0000; --bg-bottom: #0a0a0a; }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -63,10 +58,7 @@
   details summary::-webkit-details-marker { display: none; }
   details summary::after { content: '▾'; color: #666; transition: 0.2s; }
   details[open] summary::after { transform: rotate(180deg); }
-  .custom-pair { display: flex; gap: 6px; margin-top: 6px; align-items: center; }
-  .custom-pair input { flex: 1; padding: 10px 12px !important; font-size: 13px !important; }
-  .custom-pair .del-x { width: 32px; height: 32px; border-radius: 50%; background: #2a2a2a; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; }
-  .custom-add-btn { width: 100%; margin-top: 8px; padding: 10px; background: transparent; border: 1px dashed #444; border-radius: 10px; color: #888; font-size: 13px; }
+  .ai-warn { margin-top: 8px; padding: 10px 12px; border-radius: 10px; background: rgba(255, 200, 50, 0.1); border: 1px solid rgba(255, 200, 50, 0.3); font-size: 11px; color: #ffd470; line-height: 1.5; }
   #live { position: fixed; inset: 0; display: none; }
   #live.active { display: block; }
   #video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #000; transform: scaleX(-1); }
@@ -133,6 +125,10 @@
   .control-panel { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + 50px); right: 12px; z-index: 6; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
   .ctrl-btn { background: rgba(0,0,0,0.55); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #fff; font-size: 12px; font-weight: 600; padding: 8px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); }
   .ctrl-btn.end { background: rgba(255, 42, 110, 0.85); }
+  .ai-indicator { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + 96px); right: 12px; background: rgba(255, 42, 110, 0.2); border: 1px solid rgba(255, 42, 110, 0.4); padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; color: #fff; z-index: 6; display: none; align-items: center; gap: 4px; }
+  .ai-indicator.show { display: flex; }
+  .ai-dot { width: 6px; height: 6px; border-radius: 50%; background: #ff2a6e; animation: ai-pulse 1s ease-in-out infinite; }
+  @keyframes ai-pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
   .toast { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.85); padding: 14px 22px; border-radius: 14px; font-size: 14px; font-weight: 500; z-index: 20; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); text-align: center; max-width: 80%; animation: toast-in 0.3s ease-out; }
   @keyframes toast-in { from { opacity: 0; } to { opacity: 1; } }
   .install-banner { position: fixed; bottom: 12px; left: 12px; right: 12px; background: rgba(20,20,20,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid #333; border-radius: 14px; padding: 12px 14px; z-index: 200; display: flex; align-items: center; gap: 10px; font-size: 12px; line-height: 1.4; animation: toast-in 0.4s ease-out; }
@@ -172,30 +168,34 @@
     <option value="environment">Back</option>
   </select>
   <details>
+    <summary>🤖 AI Reactions (smart fan replies)</summary>
+    <div style="margin-top: 8px;">
+      <div class="toggle-row">
+        <div><span>Use AI for reactions</span><span class="desc">Fans intelligently react to anything you say</span></div>
+        <label class="switch"><input type="checkbox" id="tAI" /><span class="slider"></span></label>
+      </div>
+      <label style="margin-top: 14px;">Anthropic API Key</label>
+      <input id="apiKey" type="password" placeholder="sk-ant-api03-..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+      <div class="ai-warn">🔒 Saved only on your device. Get a key at console.anthropic.com. Set a $5 monthly limit in your Anthropic settings as a safety cap. Each reaction costs ~$0.001.</div>
+    </div>
+  </details>
+  <details>
     <summary>Activity Settings</summary>
     <div style="margin-top: 8px;">
       <div class="toggle-row"><div><span>Comments</span><span class="desc">Realistic chat scrolling by</span></div><label class="switch"><input type="checkbox" id="tComments" checked /><span class="slider"></span></label></div>
       <div class="toggle-row"><div><span>Voice activation</span><span class="desc">Comments react when you talk</span></div><label class="switch"><input type="checkbox" id="tVoice" checked /><span class="slider"></span></label></div>
       <div class="toggle-row"><div><span>Floating hearts</span><span class="desc">Hearts rise from corner</span></div><label class="switch"><input type="checkbox" id="tHearts" checked /><span class="slider"></span></label></div>
       <div class="toggle-row"><div><span>Donations / gifts</span><span class="desc">Roses, diamonds, rockets</span></div><label class="switch"><input type="checkbox" id="tDonations" checked /><span class="slider"></span></label></div>
-      <div class="toggle-row"><div><span>Join notifications</span><span class="desc">"User joined" messages</span></div><label class="switch"><input type="checkbox" id="tJoins" checked /><span class="slider"></span></label></div>
-      <div class="toggle-row"><div><span>Verified / top fan badges</span><span class="desc">Some get checks & crowns</span></div><label class="switch"><input type="checkbox" id="tBadges" checked /><span class="slider"></span></label></div>
-      <div class="toggle-row"><div><span>Highlight my comments</span><span class="desc">Gradient border on your messages</span></div><label class="switch"><input type="checkbox" id="tHighlightSelf" checked /><span class="slider"></span></label></div>
+      <div class="toggle-row"><div><span>Join notifications</span></div><label class="switch"><input type="checkbox" id="tJoins" checked /><span class="slider"></span></label></div>
+      <div class="toggle-row"><div><span>Verified / top fan badges</span></div><label class="switch"><input type="checkbox" id="tBadges" checked /><span class="slider"></span></label></div>
+      <div class="toggle-row"><div><span>Highlight my comments</span></div><label class="switch"><input type="checkbox" id="tHighlightSelf" checked /><span class="slider"></span></label></div>
       <div class="slider-row"><div class="lbl"><span>Comment speed</span><span class="v" id="speedVal">Normal</span></div><input type="range" id="speedRange" min="0" max="3" step="1" value="1" /></div>
       <div class="slider-row"><div class="lbl"><span>Donation frequency</span><span class="v" id="donVal">Normal</span></div><input type="range" id="donRange" min="0" max="3" step="1" value="1" /></div>
     </div>
   </details>
-  <details>
-    <summary>Custom keyword reactions</summary>
-    <div style="margin-top: 8px;">
-      <div style="font-size: 11px; color: #777; margin-bottom: 8px; line-height: 1.5;">Define your own bits. When you type/say the keyword, fans will reply with comma-separated reactions.</div>
-      <div id="customKwList"></div>
-      <button class="custom-add-btn" id="addCustomKw">+ Add custom keyword</button>
-    </div>
-  </details>
   <button id="goLive">Go Live</button>
   <div class="error-box" id="errorBox"></div>
-  <div class="hint">Tap mic 🎤 for voice. Type anything — fans react to ANY message.<br>Use 6 reaction buttons or ❓ for fan questions.</div>
+  <div class="hint">Turn on AI Reactions for fans to truly understand & reply to anything you say.</div>
 </div>
 <div id="live">
   <video id="video" autoplay muted playsinline></video>
@@ -218,6 +218,7 @@
     <div class="pinned-content"><div class="pinlabel">Pinned</div><div class="pintext" id="pinnedText"></div></div>
   </div>
   <div class="control-panel"><button class="ctrl-btn end" id="endBtn">End Live</button></div>
+  <div class="ai-indicator" id="aiIndicator"><span class="ai-dot"></span> AI</div>
   <div class="comments" id="comments"></div>
   <div class="hearts-area" id="hearts"></div>
   <div class="reaction-buttons">
@@ -241,114 +242,34 @@
 </div>
 <script>
 'use strict';
-const state = { stream: null, isLive: false, viewerCount: 0, viewerTarget: 10000, username: 'nabillion', streamTitle: '', pinnedComment: '', enableComments: true, enableHearts: true, enableDonations: true, enableJoins: true, enableBadges: true, enableVoice: true, highlightSelf: true, facing: 'user', intervals: [], theme: 'instagram', speedTier: 1, donTier: 1, badgeMap: new Map(), recognition: null, voiceActive: false, customKeywords: [] };
+const state = { stream: null, isLive: false, viewerCount: 0, viewerTarget: 10000, username: 'nabillion', streamTitle: '', pinnedComment: '', enableComments: true, enableHearts: true, enableDonations: true, enableJoins: true, enableBadges: true, enableVoice: true, highlightSelf: true, useAI: false, apiKey: '', facing: 'user', intervals: [], theme: 'instagram', speedTier: 1, donTier: 1, badgeMap: new Map(), recognition: null, voiceActive: false, recentMessages: [], lastVoiceTime: 0 };
 const speedMultipliers = [1.8, 1.0, 0.55, 0.3];
 const speedLabels = ['Slow', 'Normal', 'Fast', 'Insane'];
 const donRanges = [[60, 120], [25, 50], [10, 20], [4, 10]];
 const donLabels = ['Rare', 'Normal', 'Frequent', 'Constant'];
 const usernamePool = ['sarah_jpg','mikedoes','its_jenna','aaliyah.k','dom_b','tiffanyy','rico.suave','ash.lol','kimora.x','jaybird.94','milo.zz','priya_p','tito_v','lana.del','marcus.ig','dev_oh','ohh.brii','xx.alex','kev.in','noooor','sams.world','official.dre','its.nadia','elena_03','badrobotcam','shaez_','ts_kelly','imanioo','jaspr','wassupkenz','yokoo','reginalddd','babyybeans','ms.mira','officialroyy','tommyy.b','itzlulu','xander.q','bria_kay','danny.d','ferr.real','mochi.poke','samm_iam','yt.jordan','kate__bee','ralphhhh','luna.star.x','b.willz','cee.dot','mz.harper','hugo_real','tashiii','hennygirl','j.crooked','nashtyy','official.zay','chrishedge','iam.cammie','iyaana','bk.knight','elliotluvr','ohh.taylor','itzkris','rmsy.j','avaaaa.b','peeej_','viv.iann','gabbyglow','it.s.maya','therealnick','jpcasey','xxannie','maaark.b','heyyitssav','tommcphee','simba.x','pria_v','bria_xoxo','noor.91','msarjun','taylordreams','officialmoesh','dev_ito','rxxchel','julezjulez','ohh.lex','vee.the.don','lilcalvin','daniii.k','itz_jess','jet.li','jillsthrills','sneakerheadj','carla.q','xx.zee','hayleyy.b','mooonbeam','pookieee','c.hugo','officialmilan','ohh.tashi','b.rownie','jorts.guy'];
-const commentPool = ["yooo who's here","lets gooo","first!","🔥🔥🔥","stop ur so cute","where r u rn","ahh hi!!","👀👀","the lighting is insane","say hi to me pls","ur energy is everything","OMG","obsessed","❤️❤️❤️","drop a song rec","what cam u using","literally crying","i needed this today","i love u","👑","the way ur smiling","my fav person fr","pls do a q&a","tea?","where's the dog","i'm so early omg","vibes are immaculate","that lipstick tho","bestie","yas","this song slaps","💀💀💀","no bc same","iconic","i can't","✨","this is therapeutic ngl","sound is great","ur outfit >>>","talk to us","what perfume omg","u look so good wym","the camera quality","we love u","stream longer pls","i'm dying laughing","i'm in love","queen behavior","❤️","🥺","omg HI","mom said hi","i'm at work watching this lol","bye not me lurking","real","facts","okayyy","💯💯","more lives plsss","i'm hooked","energy >>>","wait u're so funny","ily ily ily","ur skin is glowing","what filter","the music omg","this is so chill","chat is moving fast lol","i was just thinking abt u","ur frenchie is so cute","🐶🐶🐶","ur so down to earth","rare W","stuck here forever","this is my comfort live","sending love from far away ❤️"];
+const commentPool = ["yooo who's here","lets gooo","first!","🔥🔥🔥","stop ur so cute","where r u rn","ahh hi!!","👀👀","the lighting is insane","ur energy is everything","OMG","obsessed","❤️❤️❤️","drop a song rec","what cam u using","i love u","👑","vibes are immaculate","bestie","yas","this song slaps","💀💀💀","iconic","✨","sound is great","ur outfit >>>","talk to us","we love u","stream longer pls","queen behavior","🥺","real","facts","💯💯","i'm hooked","ily ily ily","ur skin is glowing","this is so chill","ur so down to earth","sending love from far away ❤️"];
 const moodComments = {
-  hype: ["LETS GOOO 🔥","BROO","NO WAYYY","stoppp","yessssss","🔥🔥🔥🔥","this is iconic","INSANE","im screaming","OMG OMG OMG","WOOOO","let him cook","the way im hyped","bestie WHAT","SHEESH","ON GOD","ur a real one","facts no printer","BANGER","goated","🚀🚀🚀","period queen","this song slapsss","the energy WOAH","i can't omg"],
-  love: ["i love u sm","ur literally my fav 🥺","mom hi","ur so beautiful","CRYING ur perfect","ur skin is glowing","u radiate","queen behavior","king energy","ily ily ily","heart eyes 😍","ur literally the best","obsessed w u","u carry me through life","my comfort person","wife material","husband material","stop being so cute","u >>>"],
-  laugh: ["💀💀💀","HELLPP","not me crying","im wheezing","stop im in public 😂","NO BC","the way i cackled","💀💀","im DECEASED","ok comedy career","u r unwell","ur insane","this is unhinged","CACKLING","ok funny guy","I CANT","my face hurts from laughing","sob","the audacity","ok stand up era"],
-  question: ["where r u from?","how old r u?","single?","what u do for work?","whats ur @","wym what??","wait what u mean","why tho","but why","huh??","drop the deets","explain pls","i need answers","spill","TEA?","go on...","what filter is this","what ur skincare","what shampoo u use","name plsssss","drop the link","whats the song","where is that from"],
-  greet: ["HIIII","heyy bestie","omg HI","hi from canada 🇨🇦","hi from london","hi from dubai 🇦🇪","hi from manila","hi from nyc","hi from LA","hi from australia","hi from brazil 🇧🇷","first time here!","new follower 👋","hii from work lol","late but here","hello hello","ayyyy","hey love","mwah","whats up","yo whats good","hii queen"],
-  gift: ["🌹 sent","💎 sent","🚀 sent","☕ sent","🎁 sent","🌹🌹🌹","just sent u something","check ur gifts","sent u my love","supporting always","love u biggest fan","for u 💖","take this 🥰","u deserve it"],
-  thanks: ["no thank YOU","ur welcome bestie","always 💖","anything for u","no thanks needed","ily","we love u","always here for u","u dont need to thank us","u >>>","mwah","biggest fan forever","grateful for u"],
-  agree: ["FACTS","real","100%","preach","u said it","exactly","omg yes","truth","ur so right","💯💯💯","said what u said","this","fr fr","period","real af"],
-  comfort: ["🥺🥺","aww babes","u got this","praying for u","sending love","its ok bestie","u deserve better","lots of love 💖","im here for u","whatever u need","stay strong","🫂🫂🫂","u r loved"],
-  reassure: ["NO ur stunning","stop ur perfect","u look amazing wym","dont say that","ur literally so pretty","wym ur a 10","stoppp","u always look good","🥺 ur perfect","ur fine babe","u radiate","u r enough"],
-  hype_back: ["GO OFF","preach","slay queen","real for that","king/queen behavior","ate","said what needed to be said","absolutely","stand on it","real","main character","speak ur truth"],
-  curious: ["go on...","tell us more","spill spill","details pls","👀👀","saying nothing rn","wait what","im listening","keep going","TEA??","pls elaborate","what happened","im invested"],
-  generic: ["yes go off","we hear u","say more","tell us","we're listening","👀","spillll","keep talking","im invested","keep going","ya ya ya","mhmm","go on","im here","SAY IT","ok and??","go off bestie","we're paying attention"],
+  hype: ["LETS GOOO 🔥","BROO","NO WAYYY","stoppp","yessssss","🔥🔥🔥🔥","this is iconic","INSANE","im screaming","OMG OMG OMG","WOOOO","SHEESH","ON GOD","BANGER","goated","🚀🚀🚀","period queen","the energy WOAH"],
+  love: ["i love u sm","ur literally my fav 🥺","ur so beautiful","CRYING ur perfect","ur skin is glowing","queen behavior","king energy","ily ily ily","heart eyes 😍","obsessed w u","wife material","husband material","stop being so cute","u >>>"],
+  laugh: ["💀💀💀","HELLPP","not me crying","im wheezing","stop im in public 😂","NO BC","the way i cackled","im DECEASED","ok comedy career","CACKLING","I CANT","sob","the audacity"],
+  greet: ["HIIII","heyy bestie","omg HI","hi from canada 🇨🇦","hi from london","hi from dubai 🇦🇪","hi from manila","hi from nyc","hi from LA","first time here!","new follower 👋","hello hello","ayyyy","hey love","mwah","whats up","hii queen"],
+  gift: ["🌹 sent","💎 sent","🚀 sent","☕ sent","🎁 sent","🌹🌹🌹","just sent u something","sent u my love","love u biggest fan","for u 💖"],
+  thanks: ["no thank YOU","ur welcome bestie","always 💖","anything for u","ily","we love u","always here for u","mwah","biggest fan forever"],
+  generic: ["yes go off","we hear u","say more","tell us","we're listening","👀","spillll","keep talking","im invested","mhmm","go on","SAY IT","go off bestie"],
 };
-const keywordReactions = {
-  shoes: ["where did u get those","what brand??","drop the link!!","i NEED those","ur shoes >>>","what size","r they comfy","name pls","shoes go crazy"],
-  outfit: ["where is that from","outfit OFF","drop the brand","what size r u","linkkk","ur style >>>","i need this fit","name brand pls","obsessed w that fit","whole look 🔥"],
-  fit: ["whole fit OFF","drop the fit check","outfit god","what brand","where u shop","style icon"],
-  food: ["what u eating","looks fire 🔥","send some over","recipe pls","im hungry now","what restaurant","whats that","u always eating good food","name of the place pls"],
-  music: ["who's this artist","drop the song","whats playin","SHAZAM","add to playlist","this slaps","name of the song","spotify link?","this is my new fav","🎵🎵🎵"],
-  song: ["who's this","name plsss","SHAZAM","this slaps","add to my playlist","drop the link","spotify?","its on repeat now"],
-  dog: ["🐶🐶🐶","ur dog is everything","name?","what breed","i need a dog","dog tax pls","i love him sm","puppy energy","🥺🥺🥺"],
-  cat: ["🐱🐱🐱","kitty!!","name?","what breed","pls more cat","cat tax","obsessed","baby"],
-  toronto: ["IM FROM TORONTO TOO","6ix gang","queen st?","yonge area","east end here","the 6","tdot 🇨🇦","hi from scarborough"],
-  dubai: ["IM IN DUBAI TOO","marina or downtown?","palm jumeirah?","bestie which area","DXB 🇦🇪","ur in dubai??","hi from JBR"],
-  london: ["IM IN LONDON","which side??","hi from camden","east london here","central baby","🇬🇧🇬🇧","brixton here"],
-  newyork: ["NYC bestie","manhattan?","brooklyn here","queens what up","what borough","🗽","west village?"],
-  'new york': ["NYC bestie","manhattan?","brooklyn here","queens what up","what borough","🗽"],
-  paris: ["paris bestie 🇫🇷","jealous af","take pics","montmartre?","🥐🗼"],
-  tokyo: ["tokyo!!! 🇯🇵","jealous","shibuya?","food pics pls"],
-  tired: ["go SLEEP","ur working too hard","babes rest","take a nap","get u some sleep","ur giving exhausted bb","drink water","love u get rest"],
-  exhausted: ["go to bed 🥺","u been doing too much","rest babe","love u get sleep"],
-  bored: ["lets do a q&a","play music","tell us a story","show us ur room","tour pls","sing for us","entertain us"],
-  hungry: ["go eat!!!","what u craving","ordering uber eats?","make smth","cook for us","im hungry too"],
-  cold: ["bundle up bestie","stay warm 🥶","drink something hot","brrr","cuddle weather","need a blankie"],
-  hot: ["its giving summer","ac rn","hydrate babes","stay cool","drink water 💦"],
-  birthday: ["HAPPY BIRTHDAY 🎂","🎉🎉🎉","BESTIE","happy bday queen","cake time","make a wish","🥳🎂🎉"],
-  weekend: ["whats the plans","going out?","brunch?","date night?","drinks soon?"],
-  monday: ["mood","i hate mondays","its only monday omg","this week is gonna be long","mondays are evil"],
-  friday: ["FRIDAYY","friyay 🍻","weekend baby","drinks?","TGIF","🍷🍷🍷"],
-  saturday: ["saturday vibes","best day","what r u doing today"],
-  sunday: ["sunday reset","slow day","sunday scaries","brunch?"],
-  like: ["liked!!","liked and shared","obvi liked","tap tap tap"],
-  follow: ["just followed!!","new follower 👋","followed back","followed forever"],
-  share: ["sharing!!","shared to my story","sent to all my friends","shared on tiktok"],
-  gym: ["GYM RAT","what u doing today","push pull legs?","share the routine","leg day??","im going too"],
-  workout: ["what r u doing for ur workout","share the plan","fitness era","push pull legs?","leg day","CARDIO?"],
-  running: ["how many miles","ur insane","i need to run too","share ur pace","runner girlie/guy"],
-  yoga: ["yoga era","whats ur fav pose","namaste 🧘","peaceful","ur energy >>"],
-  cooking: ["recipe???","drop the recipe","what u making","im hungry","share!!!"],
-  travel: ["where u going next","jealous","take me w u","passport ready","✈️✈️✈️"],
-  vacation: ["jealous","where r u going","take pics","have funnnn","✈️"],
-  flight: ["safe flight bestie","✈️","where to","jealous"],
-  beach: ["jealous","🌊🏖️","beach day vibes","take pics"],
-  pool: ["pool day 🏊","jealous","summer vibes","🌞🌞"],
-  coffee: ["coffee gang ☕","what u order","starbucks?","need coffee","i havent had mine yet"],
-  tea: ["tea time 🫖","what tea","spill the tea","🍵"],
-  wine: ["wine pls 🍷","cheers","what wine","drinking too 🍷"],
-  beer: ["cheers 🍻","what beer","drinking too"],
-  drunk: ["LMAO","stay safe","drunk live ftw","love a drunk live","drink water too","u r me rn"],
-  married: ["congrats 🎉","when??","wedding pics?","💍✨","mr & mrs","marriage era"],
-  engaged: ["CONGRATS 💍","WHEN","let us see the ring","💍💍💍","ahhh"],
-  single: ["same","party of one club","date me?","get u a partner","manifest love"],
-  dating: ["who??","drop the @","tea pls","details","go off"],
-  breakup: ["🥺 sending love","ur too good for them","next!!!","u deserve better","🫂"],
-  pregnant: ["CONGRATS 🤰","gender??","when due","babbbbyyyy","aw queen"],
-  work: ["wfh?","what u do","relate","corporate vibes","quit","9-5 mood"],
-  money: ["RICH ENERGY","we love a coin","get that bag","queen of finance"],
-  rich: ["WERE RICH","abundance era","secure the bag","💰💰"],
-  broke: ["same","rent week","mood","my account is sad too","pay day soon"],
-  mom: ["aw mom!! 🥰","hi mom","mom is iconic","cherish her","fav person fr"],
-  dad: ["aw dad!! 🥰","hi dad","dad jokes pls","cherish him"],
-  kids: ["kids are everything","🥺 mom/dad of the year","they're so cute","family fr"],
-  excited: ["YES BESTIE","im excited too","tell us!","🎉","go off","cant wait"],
-  nervous: ["u got this","breathe babe","u will be amazing","🤞","prayers up"],
-  scared: ["u got this","ur safe babe","im here for u","sending love"],
-  happy: ["HAPPINESS LOOKS GOOD","love this for u","ur glowing","contagious energy","good for u bestie"],
-  sad: ["🥺🥺","sending love","im here for u","bad days happen","tomorrow will be better","🫂"],
-  stressed: ["babe BREATHE","take a break","u will figure it out","one thing at a time","love u"],
-  guys: ["WE LOVE U","best chat ever","stan","grateful for u","u r the best"],
-  chat: ["the chat >>>","best chat","love this fam"],
-  joke: ["🤣🤣","NOT funny","ok comedian","stand up era","stop","im dying"],
-  serious: ["ok we're listening","spill","im invested","this is real","go on"],
-  story: ["TELL US","spill","start at the beginning","im on the edge of my seat","🍿🍿"],
-  truth: ["TEA","spill","go off","were ready"],
-};
-const fanQuestions = ["what's your sign? ♋","are you single?","what's your skincare routine","where are you from originally?","what do you do for work?","favorite movie?","what's your fav restaurant?","best advice you've ever gotten?","biggest red flag?","biggest green flag?","iphone or android?","favorite city you've visited?","celebrity crush?","what's your morning routine?","early bird or night owl?","what's your fav song rn?","fav workout?","what r u manifesting this year?","biggest goal for this year?","do you believe in love at first sight?","what's something ppl don't know about you?","fav guilty pleasure?","introvert or extrovert?","coffee or tea?","what's your love language?","biggest pet peeve?","dream vacation?","fav comfort food?","what's your superpower would be?","best concert you've been to?","MBTI type?","fav podcast?","fav color?","if you could live anywhere, where?","fav book?","scariest thing you've done?"];
-const giftPool = [{ emoji: '🌹', name: 'Rose' },{ emoji: '🍦', name: 'Ice Cream' },{ emoji: '☕', name: 'Coffee' },{ emoji: '🎁', name: 'Gift' },{ emoji: '💎', name: 'Diamond' },{ emoji: '🚀', name: 'Rocket' },{ emoji: '👑', name: 'Crown' },{ emoji: '🏆', name: 'Trophy' },{ emoji: '🦁', name: 'Lion' },{ emoji: '🐉', name: 'Dragon' }];
-const giftMessages = ["love u!!","ur amazing","❤️❤️","for u queen","for u king","keep it up!","love this stream","ur the best","stay blessed","love and light","biggest fan!"];
+const fanQuestions = ["what's your sign? ♋","are you single?","what's your skincare routine","where are you from originally?","what do you do for work?","favorite movie?","what's your fav restaurant?","best advice you've ever gotten?","biggest red flag?","biggest green flag?","iphone or android?","favorite city you've visited?","celebrity crush?","what's your morning routine?","early bird or night owl?","what's your fav song rn?","fav workout?","what r u manifesting this year?","do you believe in love at first sight?","what's something ppl don't know about you?","fav guilty pleasure?","introvert or extrovert?","coffee or tea?","what's your love language?","biggest pet peeve?","dream vacation?","fav comfort food?","best concert you've been to?","MBTI type?","fav podcast?","fav color?","if you could live anywhere, where?","fav book?"];
+const giftPool = [{ emoji: '🌹', name: 'Rose' },{ emoji: '🍦', name: 'Ice Cream' },{ emoji: '☕', name: 'Coffee' },{ emoji: '🎁', name: 'Gift' },{ emoji: '💎', name: 'Diamond' },{ emoji: '🚀', name: 'Rocket' },{ emoji: '👑', name: 'Crown' },{ emoji: '🏆', name: 'Trophy' }];
+const giftMessages = ["love u!!","ur amazing","❤️❤️","for u queen","for u king","keep it up!","love this stream","ur the best","stay blessed","biggest fan!"];
 const $ = (id) => document.getElementById(id);
 document.querySelectorAll('.theme-tab').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('.theme-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); state.theme = tab.dataset.theme; document.body.className = 'theme-' + state.theme; saveSettings(); }); });
 function loadProfiles() { try { const p = localStorage.getItem('liveProfiles'); return p ? JSON.parse(p) : []; } catch { return []; } }
-function saveProfiles(profiles) { try { localStorage.setItem('liveProfiles', JSON.stringify(profiles)); } catch {} }
+function saveProfiles(p) { try { localStorage.setItem('liveProfiles', JSON.stringify(p)); } catch {} }
 function loadActiveProfile() { try { return localStorage.getItem('liveActiveProfile') || ''; } catch { return ''; } }
-function setActiveProfile(name) { try { localStorage.setItem('liveActiveProfile', name); } catch {} }
+function setActiveProfile(n) { try { localStorage.setItem('liveActiveProfile', n); } catch {} }
 function renderProfiles() {
-  const profiles = loadProfiles();
-  const active = loadActiveProfile();
-  const bar = $('profileBar');
-  bar.innerHTML = '';
+  const profiles = loadProfiles(); const active = loadActiveProfile();
+  const bar = $('profileBar'); bar.innerHTML = '';
   profiles.forEach(p => {
     const chip = document.createElement('button');
     chip.className = 'profile-chip' + (p.username === active ? ' active' : '');
@@ -360,67 +281,33 @@ function renderProfiles() {
     chip.addEventListener('click', () => loadProfileIntoForm(p));
     bar.appendChild(chip);
   });
-  const add = document.createElement('button');
-  add.className = 'profile-chip add'; add.textContent = '+ Save current';
+  const add = document.createElement('button'); add.className = 'profile-chip add'; add.textContent = '+ Save current';
   add.addEventListener('click', saveCurrentProfile);
   bar.appendChild(add);
 }
 function loadProfileIntoForm(p) {
-  $('username').value = p.username || '';
-  $('streamTitle').value = p.streamTitle || '';
-  $('pinnedComment').value = p.pinnedComment || '';
-  $('viewerPreset').value = p.viewerTarget || '10000';
+  $('username').value = p.username || ''; $('streamTitle').value = p.streamTitle || '';
+  $('pinnedComment').value = p.pinnedComment || ''; $('viewerPreset').value = p.viewerTarget || '10000';
   $('cameraSelect').value = p.facing || 'user';
-  $('tComments').checked = p.enableComments !== false;
-  $('tHearts').checked = p.enableHearts !== false;
-  $('tDonations').checked = p.enableDonations !== false;
-  $('tJoins').checked = p.enableJoins !== false;
-  $('tBadges').checked = p.enableBadges !== false;
-  $('tVoice').checked = p.enableVoice !== false;
-  $('tHighlightSelf').checked = p.highlightSelf !== false;
-  $('speedRange').value = p.speedTier ?? 1;
-  $('donRange').value = p.donTier ?? 1;
+  $('tComments').checked = p.enableComments !== false; $('tHearts').checked = p.enableHearts !== false;
+  $('tDonations').checked = p.enableDonations !== false; $('tJoins').checked = p.enableJoins !== false;
+  $('tBadges').checked = p.enableBadges !== false; $('tVoice').checked = p.enableVoice !== false;
+  $('tHighlightSelf').checked = p.highlightSelf !== false; $('tAI').checked = !!p.useAI;
+  $('speedRange').value = p.speedTier ?? 1; $('donRange').value = p.donTier ?? 1;
   if (p.theme) { document.querySelectorAll('.theme-tab').forEach(t => t.classList.toggle('active', t.dataset.theme === p.theme)); state.theme = p.theme; document.body.className = 'theme-' + p.theme; }
-  state.customKeywords = p.customKeywords || [];
-  renderCustomKeywords();
-  setActiveProfile(p.username);
-  updateSliderLabels();
-  renderProfiles();
+  setActiveProfile(p.username); updateSliderLabels(); renderProfiles();
 }
 function saveCurrentProfile() {
   const username = $('username').value.trim();
   if (!username) return alert('Enter a username first');
-  const profile = { username, streamTitle: $('streamTitle').value.trim(), pinnedComment: $('pinnedComment').value.trim(), viewerTarget: $('viewerPreset').value, facing: $('cameraSelect').value, enableComments: $('tComments').checked, enableHearts: $('tHearts').checked, enableDonations: $('tDonations').checked, enableJoins: $('tJoins').checked, enableBadges: $('tBadges').checked, enableVoice: $('tVoice').checked, highlightSelf: $('tHighlightSelf').checked, speedTier: parseInt($('speedRange').value, 10), donTier: parseInt($('donRange').value, 10), theme: state.theme, customKeywords: state.customKeywords };
+  const profile = { username, streamTitle: $('streamTitle').value.trim(), pinnedComment: $('pinnedComment').value.trim(), viewerTarget: $('viewerPreset').value, facing: $('cameraSelect').value, enableComments: $('tComments').checked, enableHearts: $('tHearts').checked, enableDonations: $('tDonations').checked, enableJoins: $('tJoins').checked, enableBadges: $('tBadges').checked, enableVoice: $('tVoice').checked, highlightSelf: $('tHighlightSelf').checked, useAI: $('tAI').checked, speedTier: parseInt($('speedRange').value, 10), donTier: parseInt($('donRange').value, 10), theme: state.theme };
   let profiles = loadProfiles();
   profiles = profiles.filter(p => p.username !== username);
-  profiles.push(profile);
-  saveProfiles(profiles);
-  setActiveProfile(username);
-  renderProfiles();
-  showToast('Profile saved');
+  profiles.push(profile); saveProfiles(profiles); setActiveProfile(username); renderProfiles(); showToast('Profile saved');
 }
-function renderCustomKeywords() {
-  const list = $('customKwList');
-  list.innerHTML = '';
-  state.customKeywords.forEach((kw, idx) => {
-    const row = document.createElement('div');
-    row.className = 'custom-pair';
-    const kIn = document.createElement('input');
-    kIn.type = 'text'; kIn.placeholder = 'keyword'; kIn.value = kw.keyword;
-    kIn.addEventListener('input', () => { state.customKeywords[idx].keyword = kIn.value.toLowerCase().trim(); saveCustomKeywords(); });
-    const rIn = document.createElement('input');
-    rIn.type = 'text'; rIn.placeholder = 'reactions, comma separated'; rIn.value = kw.reactions;
-    rIn.addEventListener('input', () => { state.customKeywords[idx].reactions = rIn.value; saveCustomKeywords(); });
-    const del = document.createElement('button');
-    del.className = 'del-x'; del.textContent = '×';
-    del.addEventListener('click', () => { state.customKeywords.splice(idx, 1); saveCustomKeywords(); renderCustomKeywords(); });
-    row.appendChild(kIn); row.appendChild(rIn); row.appendChild(del);
-    list.appendChild(row);
-  });
-}
-function saveCustomKeywords() { try { localStorage.setItem('liveCustomKw', JSON.stringify(state.customKeywords)); } catch {} }
-function loadCustomKeywords() { try { const raw = localStorage.getItem('liveCustomKw'); if (raw) state.customKeywords = JSON.parse(raw); } catch {} }
-$('addCustomKw').addEventListener('click', () => { state.customKeywords.push({ keyword: '', reactions: '' }); renderCustomKeywords(); });
+function saveApiKey() { try { localStorage.setItem('liveApiKey', $('apiKey').value.trim()); } catch {} }
+function loadApiKey() { try { const k = localStorage.getItem('liveApiKey'); if (k) $('apiKey').value = k; } catch {} }
+$('apiKey').addEventListener('input', saveApiKey);
 function saveSettings() { try { localStorage.setItem('liveTheme', state.theme); } catch {} }
 function loadSettings() { try { const t = localStorage.getItem('liveTheme'); if (t) { state.theme = t; document.body.className = 'theme-' + t; document.querySelectorAll('.theme-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.theme === t)); } } catch {} }
 function updateSliderLabels() { $('speedVal').textContent = speedLabels[parseInt($('speedRange').value, 10)]; $('donVal').textContent = donLabels[parseInt($('donRange').value, 10)]; }
@@ -432,14 +319,14 @@ $('closeBtn').addEventListener('click', endLive);
 $('heartBtn').addEventListener('click', () => { for (let i = 0; i < 6; i++) setTimeout(() => spawnHeart(true), i * 80); });
 document.querySelectorAll('.reaction-btn[data-mood]').forEach(btn => { btn.addEventListener('click', () => triggerMoodReaction(btn.dataset.mood)); });
 $('vqBtn').addEventListener('click', showViewerQuestion);
-$('keywordInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') { const text = e.target.value.trim(); if (text) { sendUserMessage(text); e.target.value = ''; e.target.blur(); } } });
+$('keywordInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') { const t = e.target.value.trim(); if (t) { sendUserMessage(t); e.target.value = ''; e.target.blur(); } } });
 $('micBtn').addEventListener('click', toggleVoice);
 function fmt(n) { if (n >= 1_000_000) return (n/1_000_000).toFixed(1).replace(/\.0$/,'')+'M'; if (n >= 10_000) return (n/1000).toFixed(1).replace(/\.0$/,'')+'K'; if (n >= 1000) return (n/1000).toFixed(1)+'K'; return String(Math.floor(n)); }
 function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 function avatarColor(seed) { const palette = ['linear-gradient(135deg,#f093fb,#f5576c)','linear-gradient(135deg,#4facfe,#00f2fe)','linear-gradient(135deg,#43e97b,#38f9d7)','linear-gradient(135deg,#fa709a,#fee140)','linear-gradient(135deg,#30cfd0,#330867)','linear-gradient(135deg,#a8edea,#fed6e3)','linear-gradient(135deg,#ff9a9e,#fecfef)','linear-gradient(135deg,#ffecd2,#fcb045)','linear-gradient(135deg,#667eea,#764ba2)','linear-gradient(135deg,#ffafbd,#ffc3a0)']; let h = 0; for (const c of seed) h = (h*31+c.charCodeAt(0))|0; return palette[Math.abs(h)%palette.length]; }
 function esc(s) { return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function getBadge(name) { if (!state.enableBadges) return null; if (state.badgeMap.has(name)) return state.badgeMap.get(name); const r = Math.random(); let badge = null; if (r < 0.07) badge = 'verified'; else if (r < 0.12) badge = 'crown'; state.badgeMap.set(name, badge); return badge; }
+function getBadge(name) { if (!state.enableBadges) return null; if (state.badgeMap.has(name)) return state.badgeMap.get(name); const r = Math.random(); let b = null; if (r < 0.07) b = 'verified'; else if (r < 0.12) b = 'crown'; state.badgeMap.set(name, b); return b; }
 function showToast(msg, ms = 2200) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; (state.isLive ? $('live') : $('setup')).appendChild(t); setTimeout(() => t.remove(), ms); }
 function showError(msg) { const box = $('errorBox'); box.textContent = msg; box.classList.add('show'); }
 function hideError() { $('errorBox').classList.remove('show'); }
@@ -451,19 +338,22 @@ async function startLive() {
   state.pinnedComment = $('pinnedComment').value.trim();
   state.viewerTarget = parseInt($('viewerPreset').value, 10);
   state.facing = $('cameraSelect').value;
-  state.enableComments = $('tComments').checked;
-  state.enableHearts = $('tHearts').checked;
-  state.enableDonations = $('tDonations').checked;
-  state.enableJoins = $('tJoins').checked;
-  state.enableBadges = $('tBadges').checked;
-  state.enableVoice = $('tVoice').checked;
-  state.highlightSelf = $('tHighlightSelf').checked;
+  state.enableComments = $('tComments').checked; state.enableHearts = $('tHearts').checked;
+  state.enableDonations = $('tDonations').checked; state.enableJoins = $('tJoins').checked;
+  state.enableBadges = $('tBadges').checked; state.enableVoice = $('tVoice').checked;
+  state.highlightSelf = $('tHighlightSelf').checked; state.useAI = $('tAI').checked;
+  state.apiKey = $('apiKey').value.trim();
   state.speedTier = parseInt($('speedRange').value, 10);
   state.donTier = parseInt($('donRange').value, 10);
-  state.badgeMap.clear();
+  state.badgeMap.clear(); state.recentMessages = [];
+  if (state.useAI && !state.apiKey) {
+    btn.disabled = false; btn.textContent = 'Go Live';
+    showError('AI is on but no API key. Add your key in the AI section, or turn off AI Reactions.');
+    return;
+  }
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { btn.disabled = false; btn.textContent = 'Go Live'; showError('Camera not available. Open over https://'); return; }
   try { state.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: state.facing }, audio: true }); }
-  catch (err) { btn.disabled = false; btn.textContent = 'Go Live'; let msg = ''; if (err.name === 'NotAllowedError') msg = 'Permission denied. Reload and allow camera/mic.'; else if (err.name === 'NotFoundError') msg = 'No camera found.'; else if (err.name === 'NotReadableError') msg = 'Camera busy. Close other apps using it.'; else msg = (err.name || 'Error') + ': ' + (err.message || err); showError(msg); return; }
+  catch (err) { btn.disabled = false; btn.textContent = 'Go Live'; let msg = ''; if (err.name === 'NotAllowedError') msg = 'Permission denied. Reload and allow camera/mic.'; else if (err.name === 'NotFoundError') msg = 'No camera found.'; else if (err.name === 'NotReadableError') msg = 'Camera busy.'; else msg = (err.name || 'Error') + ': ' + (err.message || err); showError(msg); return; }
   $('video').srcObject = state.stream;
   $('video').classList.toggle('no-mirror', state.facing !== 'user');
   $('liveName').textContent = state.username;
@@ -472,43 +362,43 @@ async function startLive() {
   $('avatarInner').style.background = avatarColor(state.username);
   $('liveVerified').style.display = 'inline-flex';
   if (state.pinnedComment) { $('pinnedText').textContent = state.pinnedComment; $('pinnedBox').style.display = 'flex'; } else { $('pinnedBox').style.display = 'none'; }
-  $('setup').style.display = 'none';
-  $('live').classList.add('active');
+  if (state.useAI) $('aiIndicator').classList.add('show'); else $('aiIndicator').classList.remove('show');
+  $('setup').style.display = 'none'; $('live').classList.add('active');
   state.isLive = true;
   state.viewerCount = Math.max(1, Math.floor(state.viewerTarget * 0.05));
-  updateViewerDisplay();
-  rampViewers();
-  startActivity();
+  updateViewerDisplay(); rampViewers(); startActivity();
   btn.disabled = false; btn.textContent = 'Go Live';
 }
 function updateViewerDisplay() { $('viewerCount').textContent = fmt(state.viewerCount); }
 function rampViewers() {
-  const rampDuration = 35000 + Math.random() * 25000;
-  const startCount = state.viewerCount;
-  const startTime = Date.now();
-  const rampInterval = setInterval(() => {
-    const elapsed = Date.now() - startTime;
-    const progress = Math.min(1, elapsed / rampDuration);
-    const eased = 1 - Math.pow(1 - progress, 2.5);
-    state.viewerCount = Math.floor(startCount + (state.viewerTarget - startCount) * eased);
-    state.viewerCount += randInt(-Math.floor(state.viewerTarget * 0.002), Math.floor(state.viewerTarget * 0.003));
-    state.viewerCount = Math.max(1, state.viewerCount);
-    updateViewerDisplay();
-    if (progress >= 1) {
-      clearInterval(rampInterval);
-      const fluxInterval = setInterval(() => { if (!state.isLive) return clearInterval(fluxInterval); const drift = (Math.random() - 0.45) * state.viewerTarget * 0.015; state.viewerCount = Math.max(1, Math.floor(state.viewerCount + drift)); if (Math.random() < 0.04) state.viewerCount += randInt(50, Math.max(100, Math.floor(state.viewerTarget * 0.03))); state.viewerCount = Math.min(state.viewerCount, Math.floor(state.viewerTarget * 1.4)); updateViewerDisplay(); }, 1500);
-      state.intervals.push(fluxInterval);
+  const dur = 35000 + Math.random() * 25000; const start = state.viewerCount; const t0 = Date.now();
+  const ri = setInterval(() => {
+    const e = Date.now() - t0; const p = Math.min(1, e / dur); const eased = 1 - Math.pow(1 - p, 2.5);
+    state.viewerCount = Math.floor(start + (state.viewerTarget - start) * eased);
+    state.viewerCount += randInt(-Math.floor(state.viewerTarget*0.002), Math.floor(state.viewerTarget*0.003));
+    state.viewerCount = Math.max(1, state.viewerCount); updateViewerDisplay();
+    if (p >= 1) {
+      clearInterval(ri);
+      const fi = setInterval(() => {
+        if (!state.isLive) return clearInterval(fi);
+        const drift = (Math.random() - 0.45) * state.viewerTarget * 0.015;
+        state.viewerCount = Math.max(1, Math.floor(state.viewerCount + drift));
+        if (Math.random() < 0.04) state.viewerCount += randInt(50, Math.max(100, Math.floor(state.viewerTarget*0.03)));
+        state.viewerCount = Math.min(state.viewerCount, Math.floor(state.viewerTarget * 1.4));
+        updateViewerDisplay();
+      }, 1500);
+      state.intervals.push(fi);
     }
   }, 250);
-  state.intervals.push(rampInterval);
+  state.intervals.push(ri);
 }
 function startActivity() {
   const speedMult = speedMultipliers[state.speedTier];
   const baseDelay = Math.max(450, 2200 - Math.log10(state.viewerTarget) * 280) * speedMult;
-  function scheduleComment() { if (!state.isLive) return; const delay = baseDelay * (0.5 + Math.random()); setTimeout(() => { if (!state.isLive) return; const r = Math.random(); if (state.enableJoins && r < 0.12) addJoinEvent(); else if (state.enableComments) addComment(); scheduleComment(); }, delay); }
-  scheduleComment();
-  if (state.enableHearts) { const heartInterval = setInterval(() => { if (!state.isLive) return; const count = randInt(1, 3); for (let i = 0; i < count; i++) setTimeout(() => spawnHeart(false), i * 150); }, 1100); state.intervals.push(heartInterval); }
-  if (state.enableDonations) { const [minS, maxS] = donRanges[state.donTier]; function scheduleDonation() { if (!state.isLive) return; const delay = randInt(minS * 1000, maxS * 1000); setTimeout(() => { if (!state.isLive) return; addDonation(); scheduleDonation(); }, delay); } setTimeout(scheduleDonation, randInt(5000, 12000)); }
+  function sched() { if (!state.isLive) return; const d = baseDelay * (0.5 + Math.random()); setTimeout(() => { if (!state.isLive) return; const r = Math.random(); if (state.enableJoins && r < 0.12) addJoinEvent(); else if (state.enableComments) addComment(); sched(); }, d); }
+  sched();
+  if (state.enableHearts) { const hi = setInterval(() => { if (!state.isLive) return; const c = randInt(1, 3); for (let i = 0; i < c; i++) setTimeout(() => spawnHeart(false), i * 150); }, 1100); state.intervals.push(hi); }
+  if (state.enableDonations) { const [minS, maxS] = donRanges[state.donTier]; function schedD() { if (!state.isLive) return; const d = randInt(minS*1000, maxS*1000); setTimeout(() => { if (!state.isLive) return; addDonation(); schedD(); }, d); } setTimeout(schedD, randInt(5000, 12000)); }
 }
 function addComment() { appendComment({ name: rand(usernamePool), text: rand(commentPool), type: 'normal' }); }
 function addJoinEvent() { const name = rand(usernamePool); const txt = Math.random() < 0.5 ? 'joined' : 'started following'; appendComment({ name, joinText: txt, type: 'event' }); }
@@ -520,18 +410,14 @@ function appendComment({ name, text, type, gift, joinText, isSelf }) {
   if (type === 'donation') cls += ' donation';
   if (isSelf) { cls += ' self'; if (state.highlightSelf) cls += ' highlighted'; }
   el.className = cls;
-  const avatar = document.createElement('div');
-  avatar.className = 'avatar';
-  const inner = document.createElement('div');
-  inner.className = 'avatar-inner';
-  inner.textContent = name.charAt(0).toUpperCase();
-  inner.style.background = avatarColor(name);
+  const avatar = document.createElement('div'); avatar.className = 'avatar';
+  const inner = document.createElement('div'); inner.className = 'avatar-inner';
+  inner.textContent = name.charAt(0).toUpperCase(); inner.style.background = avatarColor(name);
   avatar.appendChild(inner);
   let badgeHtml = '';
-  if (isSelf) { badgeHtml = ' <span class="verified"></span>'; }
-  else { const badge = getBadge(name); if (badge === 'verified') badgeHtml = ' <span class="verified"></span>'; else if (badge === 'crown') badgeHtml = ' <span class="badge-crown">👑</span>'; }
-  const body = document.createElement('div');
-  body.className = 'comment-body';
+  if (isSelf) badgeHtml = ' <span class="verified"></span>';
+  else { const b = getBadge(name); if (b === 'verified') badgeHtml = ' <span class="verified"></span>'; else if (b === 'crown') badgeHtml = ' <span class="badge-crown">👑</span>'; }
+  const body = document.createElement('div'); body.className = 'comment-body';
   if (type === 'donation') body.innerHTML = `<span class="name">${esc(name)}${badgeHtml}</span> sent <span class="gift-emoji">${gift.emoji}</span>${esc(gift.name)}${text ? ' · ' + esc(text) : ''}`;
   else if (type === 'event') body.innerHTML = `<span class="name">${esc(name)}${badgeHtml}</span> ${esc(joinText)}`;
   else body.innerHTML = `<span class="name">${esc(name)}${badgeHtml}</span>${esc(text)}`;
@@ -540,60 +426,92 @@ function appendComment({ name, text, type, gift, joinText, isSelf }) {
   while ($('comments').children.length > 12) $('comments').removeChild($('comments').firstChild);
 }
 function spawnHeart(fromTap) { const colors = ['❤️','🧡','💛','💚','💙','💜','🤍','💖','💗']; const h = document.createElement('div'); h.className = 'heart'; h.textContent = rand(colors); h.style.left = randInt(20, 60) + 'px'; h.style.setProperty('--drift', `calc(-50% + ${randInt(-80, 30)}px)`); h.style.setProperty('--rot', randInt(-30, 30) + 'deg'); if (fromTap) h.style.fontSize = '32px'; $('hearts').appendChild(h); setTimeout(() => h.remove(), 4200); }
-function triggerMoodReaction(mood) { const pool = moodComments[mood]; if (!pool) return; const count = randInt(4, 7); for (let i = 0; i < count; i++) { setTimeout(() => { if (!state.isLive) return; const name = rand(usernamePool); const text = rand(pool); if (mood === 'gift') { const gift = rand(giftPool); appendComment({ name, text: '', gift, type: 'donation' }); state.viewerCount += randInt(2, 8); updateViewerDisplay(); } else { appendComment({ name, text, type: 'normal' }); } }, i * randInt(180, 450)); } for (let i = 0; i < 5; i++) setTimeout(() => spawnHeart(false), i * 100); }
-function detectIntent(text) {
-  const t = text.toLowerCase().trim();
-  const hasQuestionMark = /\?/.test(t);
-  const isCaps = text.length > 4 && text === text.toUpperCase() && /[A-Z]/.test(text);
-  const isLol = /\b(lol|lmao|haha|hahaha|lmfao|rofl)\b|😂|🤣|💀/.test(t);
-  if (/^(hi|hey|hello|yo|sup|wassup|whats up|what's up|hii|heyy|good morning|good evening|good afternoon)\b/.test(t)) return 'greet';
-  if (/\b(thank you|thanks|tysm|ty|appreciate)\b/.test(t)) return 'thanks';
-  if (hasQuestionMark || /^(who|what|where|when|why|how|do you|did you|are you|is it|can you|should i|would you)\b/.test(t)) return 'curious';
-  if (/\b(i look (bad|tired|terrible|ugly)|i feel ugly|i'?m so (tired|exhausted|done|ugly))\b/.test(t)) return 'reassure';
-  if (/\b(sad|cry|crying|hate|tired|exhausted|stressed|anxious|depressed|down|upset|broken|hurt|miss|missing)\b/.test(t)) return 'comfort';
-  if (/\b(love (you|u|yall|y'?all|you guys|u guys)|you guys are|u guys are|chat is|best chat|love this fam)\b/.test(t)) return 'love_back';
-  if (isCaps || /!{2,}|🔥|🎉|excited|amazing|incredible|insane|crazy|wild/.test(t)) return 'hype_back';
-  if (isLol) return 'laugh';
-  if (/^i\s/.test(t) || /\b(i think|i feel|i love|i hate|i want|i need|i'm|im )\b/.test(t)) return 'agree';
-  return 'generic';
-}
-function sendUserMessage(text) {
-  appendComment({ name: state.username, text, type: 'normal', isSelf: true });
-  for (let i = 0; i < 3; i++) setTimeout(() => spawnHeart(false), i * 120);
-  setTimeout(() => processInput(text), randInt(400, 900));
-}
-function processInput(text) {
-  const lower = text.toLowerCase();
-  let pool = [];
-  for (const kw of state.customKeywords) {
-    if (kw.keyword && lower.includes(kw.keyword)) {
-      const reactions = kw.reactions.split(',').map(r => r.trim()).filter(Boolean);
-      pool.push(...reactions);
+function triggerMoodReaction(mood) { const pool = moodComments[mood]; if (!pool) return; const count = randInt(4, 7); for (let i = 0; i < count; i++) { setTimeout(() => { if (!state.isLive) return; const name = rand(usernamePool); const text = rand(pool); if (mood === 'gift') { const gift = rand(giftPool); appendComment({ name, text: '', gift, type: 'donation' }); state.viewerCount += randInt(2, 8); updateViewerDisplay(); } else appendComment({ name, text, type: 'normal' }); }, i * randInt(180, 450)); } for (let i = 0; i < 5; i++) setTimeout(() => spawnHeart(false), i * 100); }
+async function generateAIReactions(userMessage) {
+  if (!state.apiKey) return null;
+  const recent = state.recentMessages.slice(-3).join(' / ') || 'none';
+  const prompt = `You're generating realistic Instagram Live fan comments. The streamer's username is "${state.username}".
+
+The streamer just said: "${userMessage}"
+
+Recent context (their last few messages): ${recent}
+
+Generate 6 short fan reactions to what they just said. Make them VARIED:
+- Some directly reply or answer if it's a question
+- Some agree, react emotionally, or hype them up
+- Some ask follow-up questions
+- Some add their own related thoughts
+
+RULES:
+- Each comment 1-10 words MAX
+- Casual lowercase, with occasional caps for emphasis
+- Use emojis sparingly (~30% of comments)
+- Sound like REAL Gen-Z/millennial fans, not AI
+- No quotes around comments
+- Each comment on its own line, no numbering, no dashes
+- Don't repeat what they said back to them
+- Make them feel like real people typing fast
+
+Output ONLY the 6 comments, one per line, nothing else.`;
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': state.apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 300,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+    if (!resp.ok) {
+      const errText = await resp.text();
+      console.error('AI error:', resp.status, errText);
+      return null;
     }
+    const data = await resp.json();
+    const text = data?.content?.[0]?.text || '';
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l && l.length < 80 && l.length > 1);
+    return lines.length > 0 ? lines : null;
+  } catch (err) {
+    console.error('AI fetch failed:', err);
+    return null;
   }
-  for (const [key, comments] of Object.entries(keywordReactions)) {
-    if (lower.includes(key)) pool.push(...comments);
+}
+async function sendUserMessage(text) {
+  appendComment({ name: state.username, text, type: 'normal', isSelf: true });
+  state.recentMessages.push(text);
+  if (state.recentMessages.length > 10) state.recentMessages.shift();
+  for (let i = 0; i < 3; i++) setTimeout(() => spawnHeart(false), i * 120);
+  if (state.useAI && state.apiKey) {
+    const reactions = await generateAIReactions(text);
+    if (reactions && reactions.length > 0) {
+      reactions.forEach((r, i) => {
+        setTimeout(() => {
+          if (!state.isLive) return;
+          const name = rand(usernamePool);
+          appendComment({ name, text: r, type: 'normal' });
+        }, 600 + i * randInt(400, 900));
+      });
+      for (let i = 0; i < 4; i++) setTimeout(() => spawnHeart(false), i * 200);
+      return;
+    }
+    showToast('AI failed, using fallback', 1500);
   }
-  const intent = detectIntent(text);
-  const intentMap = { greet: 'greet', thanks: 'thanks', curious: 'curious', reassure: 'reassure', comfort: 'comfort', love_back: 'love', hype_back: 'hype_back', laugh: 'laugh', agree: 'agree', generic: 'generic' };
-  const moodKey = intentMap[intent] || 'generic';
-  const moodPool = moodComments[moodKey] || moodComments.generic;
-  pool.push(...moodPool);
-  pool.push(...moodComments.generic.slice(0, 6));
-  const count = randInt(5, 9);
-  for (let i = 0; i < count; i++) {
-    setTimeout(() => { if (!state.isLive) return; const name = rand(usernamePool); const txt = rand(pool); appendComment({ name, text: txt, type: 'normal' }); }, 200 + i * randInt(180, 480));
-  }
-  for (let i = 0; i < 4; i++) setTimeout(() => spawnHeart(false), i * 150);
+  const fallbackPool = [...moodComments.generic, ...moodComments.greet, ...moodComments.hype];
+  const count = randInt(4, 6);
+  for (let i = 0; i < count; i++) setTimeout(() => { if (!state.isLive) return; appendComment({ name: rand(usernamePool), text: rand(fallbackPool), type: 'normal' }); }, 400 + i * randInt(250, 500));
+  for (let i = 0; i < 3; i++) setTimeout(() => spawnHeart(false), i * 150);
 }
 function showViewerQuestion() {
   if (!state.isLive) return;
-  const existing = document.querySelector('.viewer-q-popup');
-  if (existing) existing.remove();
-  const name = rand(usernamePool);
-  const question = rand(fanQuestions);
-  const popup = document.createElement('div');
-  popup.className = 'viewer-q-popup';
+  document.querySelectorAll('.viewer-q-popup').forEach(p => p.remove());
+  const name = rand(usernamePool); const question = rand(fanQuestions);
+  const popup = document.createElement('div'); popup.className = 'viewer-q-popup';
   const badge = getBadge(name);
   let badgeHtml = '';
   if (badge === 'verified') badgeHtml = ' <span class="verified"></span>';
@@ -604,7 +522,7 @@ function showViewerQuestion() {
   setTimeout(() => closePopup(popup), 8000);
   appendComment({ name, text: question, type: 'normal' });
 }
-function closePopup(popup) { if (!popup || !popup.parentNode) return; popup.classList.add('closing'); setTimeout(() => popup.remove(), 300); }
+function closePopup(p) { if (!p || !p.parentNode) return; p.classList.add('closing'); setTimeout(() => p.remove(), 300); }
 function toggleVoice() { if (state.voiceActive) stopVoice(); else startVoice(); }
 function startVoice() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -612,7 +530,19 @@ function startVoice() {
   try {
     const rec = new SR();
     rec.continuous = true; rec.interimResults = true; rec.lang = 'en-US';
-    rec.onresult = (e) => { for (let i = e.resultIndex; i < e.results.length; i++) { const result = e.results[i]; if (result.isFinal) { const txt = result[0].transcript.trim(); if (txt && txt.length > 2) processInput(txt); } } };
+    rec.onresult = (e) => {
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const r = e.results[i];
+        if (r.isFinal) {
+          const txt = r[0].transcript.trim();
+          const now = Date.now();
+          if (txt && txt.length > 3 && now - state.lastVoiceTime > 1500) {
+            state.lastVoiceTime = now;
+            sendUserMessage(txt);
+          }
+        }
+      }
+    };
     rec.onerror = (e) => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { showToast('Mic permission denied'); stopVoice(); } };
     rec.onend = () => { if (state.voiceActive) { try { rec.start(); } catch {} } };
     rec.start();
@@ -622,15 +552,21 @@ function startVoice() {
   } catch (err) { showToast('Voice failed: ' + (err.message || err)); }
 }
 function stopVoice() { if (state.recognition) { try { state.recognition.stop(); } catch {} state.recognition = null; } state.voiceActive = false; $('micBtn').classList.remove('active'); }
-function endLive() { state.isLive = false; stopVoice(); state.intervals.forEach(clearInterval); state.intervals = []; if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; } $('video').srcObject = null; $('live').classList.remove('active'); $('setup').style.display = ''; $('comments').innerHTML = ''; $('hearts').innerHTML = ''; $('liveVerified').style.display = 'none'; $('keywordInput').value = ''; document.querySelectorAll('.viewer-q-popup').forEach(p => p.remove()); }
+function endLive() {
+  state.isLive = false; stopVoice();
+  state.intervals.forEach(clearInterval); state.intervals = [];
+  if (state.stream) { state.stream.getTracks().forEach(t => t.stop()); state.stream = null; }
+  $('video').srcObject = null;
+  $('live').classList.remove('active');
+  $('setup').style.display = '';
+  $('comments').innerHTML = ''; $('hearts').innerHTML = '';
+  $('liveVerified').style.display = 'none'; $('keywordInput').value = '';
+  $('aiIndicator').classList.remove('show');
+  document.querySelectorAll('.viewer-q-popup').forEach(p => p.remove());
+}
 function maybeShowInstallBanner() { const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent); const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone; const dismissed = localStorage.getItem('installDismissed'); if (isIOS && !isStandalone && !dismissed) { setTimeout(() => $('installBanner').style.display = 'flex', 1500); } }
 $('dismissBanner').addEventListener('click', () => { $('installBanner').style.display = 'none'; try { localStorage.setItem('installDismissed', '1'); } catch {} });
-loadSettings();
-loadCustomKeywords();
-renderProfiles();
-renderCustomKeywords();
-updateSliderLabels();
-maybeShowInstallBanner();
+loadSettings(); loadApiKey(); renderProfiles(); updateSliderLabels(); maybeShowInstallBanner();
 window.addEventListener('beforeunload', (e) => { if (state.isLive) { e.preventDefault(); e.returnValue = ''; } });
 </script>
 </body>
